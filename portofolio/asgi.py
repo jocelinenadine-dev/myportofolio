@@ -1,14 +1,9 @@
-"""
-ASGI config for myportofolio project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/6.1/howto/deployment/asgi/
-"""
+# ==============================================================================
+# [TUTORIAL 1]: ASGI (Asynchronous Server Gateway Interface)
+# File konfigurasi standar Django untuk mendukung protokol asinkronus (async).
+# ==============================================================================
 
 import os
-
 from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'portofolio.settings')

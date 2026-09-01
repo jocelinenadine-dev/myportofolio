@@ -1,14 +1,10 @@
-"""
-WSGI config for myportofolio project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/6.1/howto/deployment/wsgi/
-"""
+# ==============================================================================
+# [TUTORIAL 1 & DEPLOYMENT PWS]: WSGI (Web Server Gateway Interface)
+# File ini digunakan oleh web server produksi (seperti Gunicorn di PWS) untuk 
+# menghubungkan server web ke aplikasi Django Anda.
+# ==============================================================================
 
 import os
-
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'portofolio.settings')
