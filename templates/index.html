@@ -3,59 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joceline Nadine - Portfolio</title>
+    <title>Joceline Nadine Immanuella — Portfolio</title>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Joceline Nadine</a>
-            <nav>
-                <a href="#profile">Profile</a>
-            </nav>
-        </div>
-    </header>
 
-    <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Information Systems &middot; Universitas Indonesia</p>
-                    <h1>Joceline Nadine Immanuella</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/IMG_0770.jpg" alt="Photo of Joceline Nadine">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">As an Information Systems student at Universitas Indonesia, I enjoy continuous learning and actively participating in student organizations to grow my potential. I thrive on structured planning and team collaboration to achieve shared goals. Combining technology with meaningful human collaboration is my favorite way to keep growing.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506656835</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
-                        </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/jocelinenadine-dev" class="social-link">GitHub</a>
-                        <a href="https://www.linkedin.com/in/jocelinenadine/" class="social-link">LinkedIn</a>
-                        <a href="mailto:jocelinenadine@gmail.com" class="social-link">Email</a>
-                    </div>
+    <!-- Main Container -->
+    <div class="bento-container">
+        
+        <!-- Header -->
+        <header class="bento-header">
+            <div class="header-brand">
+                <span class="brand-monogram">JN</span>
+                <div class="brand-details">
+                    <span class="brand-name">Joceline Nadine Immanuella</span>
+                    <span class="brand-role">Information Systems · Universitas Indonesia</span>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <div class="header-status-badge">
+                <span class="status-pulse"></span>
+                <span>Open for Tech &amp; Youth Leadership</span>
+            </div>
+        </header>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Joceline Nadine. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
-        </div>
-    </footer>
+        <!-- Bento Grid System -->
+        <main class="bento-grid">
+
+            <!-- Hero Profile (Span 12) -->
+            <section class="bento-tile tile-hero">
+                <div class="hero-content-col">
+                    <span class="badge-accent">Undergraduate Portfolio</span>
+                    <h1 class="hero-title">Bridging Technology, Business Strategy, and Youth Empowerment.</h1>
+                    <p class="hero-bio">
+                        As an Information Systems student at Universitas Indonesia, I enjoy continuous learning and actively participating in student organizations to grow my potential. I thrive on structured planning and team collaboration to achieve shared goals. Combining technology with meaningful human collaboration is my favorite way to keep growing.
+                    </p>
+                    <div class="hero-quick-meta">
+                        <div class="quick-meta-item">
+                            <span class="meta-caption">Student ID / NPM</span>
+                            <span class="meta-data">2506656835</span>
+                        </div>
+                        <div class="quick-meta-item">
+                            <span class="meta-caption">Degree Program</span>
+                            <span class="meta-data">B.Sc. Information Systems (FASILKOM UI)</span>
+                        </div>
+                        <div class="quick-meta-item">
+                            <span class="meta-caption">Location</span>
+                            <span class="meta-data">Jakarta Pusat, Indonesia</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-photo-col">
+                    <div class="photo-luxury-frame">
+                        <div class="photo-backdrop"></div>
+                        <img class="photo-portrait" src="/static/img/IMG_0770.jpg" alt="Joceline Nadine Immanuella">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bento-footer">
+            <p>&copy; 2026 Joceline Nadine Immanuella · Faculty of Computer Science, Universitas Indonesia.</p>
+            <p class="footer-sub">Designed with Semantic HTML5 &amp; Responsive CSS3 Bento Architecture.</p>
+        </footer>
+
+    </div>
+
 </body>
 </html>
