@@ -1,164 +1,300 @@
-* {
+/* ==========================================================================
+   BENTO GRID PORTFOLIO — JOCELINE NADINE IMMANUELLA
+   Faculty of Computer Science, Universitas Indonesia
+   Theme: Sage Green Aesthetic
+   ========================================================================== */
+
+/* 1. RESET & VARIABLES */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 :root {
-    --ink: #1c2b22;
-    --paper: #f6f8f5;
-    --accent: #6b8f71;
-    --accent-dark: #3f5e46;
-    --line: #dbe3dc;
-    --text-muted: #586b5e;
-    --radius: 6px;
+    /* Palette: Sage Green */
+    --bg-page: #F4F7F4;
+    --bg-card: #FFFFFF;
+    --bg-subtle: #EBF2EC;
+    --bg-pill: #E2ECE5;
+    
+    --ink-title: #1C3225;
+    --ink-body: #2D3E33;
+    --ink-muted: #5F7567;
+    
+    --accent-sage: #4A6B56;
+    --accent-sage-dark: #2E4D3B;
+    --accent-sage-light: #EAF1EC;
+    --accent-sage-tint: #D0DDD3;
+    
+    --accent-gold: #A67C48;
+    --accent-gold-dark: #7D592B;
+    --accent-gold-light: #FAF4EC;
+    --accent-gold-soft: #D9C3A5;
+    
+    --border-color: #D0DDD3;
+    --border-subtle: #E4EDE6;
+    --border-focus: #4A6B56;
+    
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-pill: 9999px;
+    
+    --shadow-tile: 0 4px 20px rgba(28, 50, 37, 0.05);
+    --shadow-hover: 0 12px 32px rgba(28, 50, 37, 0.10);
+    
+    --font-heading: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background-color: var(--paper);
-    line-height: 1.6;
+    font-family: var(--font-body);
+    color: var(--ink-body);
+    background-color: var(--bg-page);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
-h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
-}
-
-.container {
-    max-width: 960px;
+.bento-container {
+    max-width: 1140px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 2.5rem 1.5rem 5rem;
 }
 
-.site-header {
-    border-bottom: 1px solid var(--line);
-}
-
-.site-header .container {
+/* ==========================================================================
+   2. BENTO HEADER
+   ========================================================================== */
+.bento-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 1.5rem;
+    background-color: var(--bg-card);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-pill);
+    padding: 0.9rem 1.75rem;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--shadow-tile);
 }
 
-.brand {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--ink);
-    text-decoration: none;
-}
-
-.site-header nav {
+.header-brand {
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: 1rem;
 }
 
-.site-header nav a {
-    color: var(--ink);
-    text-decoration: none;
+.brand-monogram {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--accent-sage-dark), var(--accent-sage));
+    color: #FFFFFF;
+    font-family: var(--font-heading);
     font-size: 0.95rem;
-}
-
-.hero {
-    padding: 4.5rem 0 5rem;
-}
-
-.hero-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-areas:
-        "identity photo"
-        "details  photo";
-    gap: 1.5rem 3rem;
-}
-
-.hero-identity {
-    grid-area: identity;
-}
-
-.hero-details {
-    grid-area: details;
-}
-
-.hero-kicker {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent-dark);
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-}
-
-.hero-identity h1 {
-    font-size: clamp(3rem, 7vw, 5rem);
-    line-height: 0.95;
-}
-
-.bio {
-    color: var(--text-muted);
-    max-width: 480px;
-    margin-bottom: 1.5rem;
-}
-
-.meta-list {
+    font-weight: 800;
     display: flex;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(46, 77, 59, 0.25);
+    flex-shrink: 0;
 }
 
-.meta-row dt {
-    font-size: 0.75rem;
+.brand-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-family: var(--font-heading);
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: var(--ink-title);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.brand-role {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent-sage);
+}
+
+.header-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent-sage-dark);
+    background-color: var(--accent-sage-light);
+    padding: 0.45rem 1.15rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--accent-sage-tint);
+}
+
+.status-pulse {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-sage);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 3px rgba(74, 107, 86, 0.25);
+}
+
+/* ==========================================================================
+   3. BENTO GRID SYSTEM
+   ========================================================================== */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+}
+
+.bento-tile {
+    background-color: var(--bg-card);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem;
+    box-shadow: var(--shadow-tile);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.bento-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-sage);
+}
+
+/* Common Tile Header Elements */
+.tile-header-group {
+    margin-bottom: 1.75rem;
+}
+
+.badge-accent {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-sage-dark);
+    background-color: var(--accent-sage-light);
+    padding: 0.3rem 0.85rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--accent-sage-tint);
+    margin-bottom: 0.65rem;
+}
+
+.badge-outline {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 0.15rem;
+    color: var(--accent-gold-dark);
+    background-color: var(--accent-gold-light);
+    padding: 0.3rem 0.85rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--accent-gold-soft);
+    margin-bottom: 0.5rem;
 }
 
-.meta-row dd {
-    font-weight: 600;
+.tile-heading-lg {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 2.2vw, 1.95rem);
+    font-weight: 800;
+    color: var(--ink-title);
+    line-height: 1.22;
+    letter-spacing: -0.025em;
 }
 
-.social-links {
+.tile-desc {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    margin-top: 0.35rem;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   4. TILE 1: HERO / ABOUT ME (SPAN 12)
+   ========================================================================== */
+.tile-hero {
+    grid-column: span 12;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    background: linear-gradient(135deg, #FFFFFF 70%, #F4F7F4 100%);
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.4vw, 2.85rem);
+    font-weight: 800;
+    line-height: 1.18;
+    color: var(--ink-title);
+    letter-spacing: -0.035em;
+    margin: 0.65rem 0 1.25rem;
+}
+
+.hero-bio {
+    font-size: 1.02rem;
+    color: var(--ink-body);
+    line-height: 1.75;
+    margin-bottom: 1.75rem;
+    font-weight: 500;
+}
+
+.hero-quick-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 1.5px solid var(--border-subtle);
+}
+
+.meta-caption {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 0.25rem;
+}
+
+.meta-data {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink-title);
+}
+
+/* Photo Frame */
+.hero-photo-col {
     display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.social-link {
-    display: inline-block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--paper);
-    background-color: var(--ink);
-    border-radius: var(--radius);
-    padding: 0.5rem 1.1rem;
-    transition: background-color 0.2s ease;
-}
-
-.social-link:hover {
-    background-color: var(--accent);
-}
-
-.hero-photo {
-    grid-area: photo;
-    align-self: center;
+.photo-luxury-frame {
     position: relative;
+    max-width: 310px;
+    width: 100%;
 }
 
-.photo-block {
+.photo-backdrop {
     position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
+    top: 1rem;
+    left: 1rem;
     width: 100%;
     height: 100%;
-    background-color: var(--accent);
-    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--accent-sage-tint), var(--accent-sage));
+    border-radius: var(--radius-md);
     z-index: 0;
+    opacity: 0.8;
 }
 
-.avatar {
+.photo-portrait {
     position: relative;
     z-index: 1;
     display: block;
@@ -166,32 +302,8 @@ h1, .brand {
     aspect-ratio: 3 / 4;
     object-fit: cover;
     object-position: center 20%;
-    border-radius: var(--radius);
-    border: 3px solid var(--ink);
-}
-
-.site-footer {
-    padding: 1.5rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--line);
-}
-
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
-
-    .hero-photo {
-        max-width: 220px;
-    }
-
-    .social-links {
-        justify-content: flex-start;
-    }
+    border-radius: var(--radius-md);
+    border: 3px solid var(--ink-title);
+    box-shadow: 0 10px 28px rgba(28, 50, 37, 0.15);
 }
 
