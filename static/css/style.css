@@ -757,3 +757,62 @@ body {
     font-weight: 600;
 }
 
+/* ==========================================================================
+   11. RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 960px) {
+    .tile-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-photo-col {
+        order: -1;
+        margin-bottom: 1.5rem;
+    }
+
+    .photo-luxury-frame {
+        max-width: 240px;
+    }
+
+    .tile-edu-ui,
+    .tile-edu-penabur {
+        grid-column: span 12;
+    }
+
+    .external-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .award-item-row {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+    }
+
+    .award-badge-side {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .skills-cluster-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .bento-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        border-radius: var(--radius-md);
+    }
+
+    .hero-quick-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .bento-tile {
+        padding: 1.65rem 1.25rem;
+    }
+}
+
