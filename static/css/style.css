@@ -816,3 +816,110 @@ body {
     }
 }
 
+/* ==========================================================================
+   EXPERIENCE PAGE & NAVIGATION STYLES
+   ========================================================================== */
+.bento-nav {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.bento-nav .nav-link {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink-muted, #5F7567);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill, 9999px);
+    transition: all 0.2s ease;
+}
+
+.bento-nav .nav-link:hover {
+    color: var(--ink-title, #1C3225);
+    background-color: var(--bg-pill, #E2ECE5);
+}
+
+.experience-section {
+    padding: 2.5rem 1.5rem;
+    background-color: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-color, #D0DDD3);
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-tile, 0 4px 20px rgba(28, 50, 37, 0.05));
+    margin-top: 1.5rem;
+}
+
+.section-kicker {
+    color: var(--accent-sage, #4A6B56);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.experience-section h1 {
+    margin: 0.4rem 0 1.5rem;
+    font-size: 2.2rem;
+    font-family: var(--font-heading, inherit);
+    color: var(--ink-title, #1C3225);
+}
+
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.experience-card {
+    padding: 1.5rem;
+    background-color: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-subtle, #E4EDE6);
+    border-radius: var(--radius-md, 14px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.experience-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover, 0 12px 32px rgba(28, 50, 37, 0.10));
+}
+
+.experience-category {
+    color: var(--accent-sage-dark, #2E4D3B);
+    background-color: var(--bg-pill, #E2ECE5);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.experience-card h2 {
+    margin: 0.75rem 0 0.5rem;
+    font-size: 1.3rem;
+    font-family: var(--font-heading, inherit);
+    color: var(--ink-title, #1C3225);
+}
+
+.experience-description,
+.empty-state {
+    color: var(--ink-muted, #5F7567);
+    line-height: 1.6;
+}
+
+.empty-state {
+    font-size: 1.1rem;
+    padding: 2rem 0;
+    text-align: center;
+    grid-column: 1 / -1;
+}
+
+.experience-status {
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-gold, #A67C48);
+}
+
+

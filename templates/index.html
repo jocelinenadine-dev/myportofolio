@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joceline Nadine Immanuella — Portfolio</title>
+    <title>{{ name }} — Portfolio</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,12 +21,19 @@
         <!-- Header -->
         <header class="bento-header">
             <div class="header-brand">
-                <span class="brand-monogram">JN</span>
-                <div class="brand-details">
-                    <span class="brand-name">Joceline Nadine Immanuella</span>
-                    <span class="brand-role">Information Systems · Universitas Indonesia</span>
-                </div>
+                <a href="{% url 'main:show_main' %}" class="brand" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="brand-monogram">JN</span>
+                    <div class="brand-details">
+                        <span class="brand-name">{{ name }}</span>
+                        <span class="brand-role">{{ study_program }} · Universitas Indonesia</span>
+                    </div>
+                </a>
             </div>
+            
+            <nav class="bento-nav">
+                <a href="{% url 'main:show_main' %}" class="nav-link">Profile</a>
+                <a href="{% url 'main:show_experience' %}" class="nav-link">Experience</a>
+            </nav>
             
             <div class="header-status-badge">
                 <span class="status-pulse"></span>
@@ -43,16 +50,16 @@
                     <span class="badge-accent">Undergraduate Portfolio</span>
                     <h1 class="hero-title">Bridging Technology, Business Strategy, and Youth Empowerment.</h1>
                     <p class="hero-bio">
-                        As an Information Systems student at Universitas Indonesia, I enjoy continuous learning and actively participating in student organizations to grow my potential. I thrive on structured planning and team collaboration to achieve shared goals. Combining technology with meaningful human collaboration is my favorite way to keep growing.
+                        {{ bio }}
                     </p>
                     <div class="hero-quick-meta">
                         <div class="quick-meta-item">
                             <span class="meta-caption">Student ID / NPM</span>
-                            <span class="meta-data">2506656835</span>
+                            <span class="meta-data">{{ npm }}</span>
                         </div>
                         <div class="quick-meta-item">
                             <span class="meta-caption">Degree Program</span>
-                            <span class="meta-data">B.Sc. Information Systems (FASILKOM UI)</span>
+                            <span class="meta-data">{{ study_program }} (FASILKOM UI)</span>
                         </div>
                         <div class="quick-meta-item">
                             <span class="meta-caption">Location</span>
@@ -64,7 +71,7 @@
                 <div class="hero-photo-col">
                     <div class="photo-luxury-frame">
                         <div class="photo-backdrop"></div>
-                        <img class="photo-portrait" src="/static/img/IMG_0770.jpg" alt="Joceline Nadine Immanuella">
+                        <img class="photo-portrait" src="/static/img/IMG_0770.jpg" alt="Photo of {{ name }}">
                     </div>
                 </div>
             </section>
@@ -104,7 +111,7 @@
                     <div class="nested-role-card">
                         <div class="role-row">
                             <h3 class="role-name">COMPFEST 18 — FASILKOM UI</h3>
-                            <span class="role-year">2026</span>
+                            <span class="role-year">2026 – Present</span>
                         </div>
                         <p class="role-function">Event Staff (Playground Main Event)</p>
                         <p class="role-summary">Coordinating operations for the Playground Main Event at Indonesia's largest student-led tech festival, managing exhibitor and divisional workflows.</p>
@@ -112,8 +119,8 @@
 
                     <div class="nested-role-card">
                         <div class="role-row">
-                            <h3 class="role-name">Open House FASILKOM UI 2026</h3>
-                            <span class="role-year">2026</span>
+                            <h3 class="role-name">Open House FASILKOM UI 2025</h3>
+                            <span class="role-year">2025</span>
                         </div>
                         <p class="role-function">Documentation &amp; Engagement Crew (DEC)</p>
                         <p class="role-summary">Directed creative multimedia content and promotional campaigns to introduce computer science programs to thousands of prospective students.</p>
@@ -183,21 +190,21 @@
 
                 <div class="external-grid">
                     <article class="ext-feature-card">
-                        <span class="ext-year">2026 – 2027</span>
+                        <span class="ext-year">2025 – 2026</span>
                         <h3 class="ext-title">Google Student Ambassador</h3>
-                        <p class="ext-issuer">Google Indonesia</p>
-                        <p class="ext-body">Selected among top 2,000+ ambassadors nationwide from 81,000+ candidates. Championing Google technologies and building active campus tech community engagement.</p>
+                        <p class="ext-issuer">Google · Class of 2026</p>
+                        <p class="ext-body">Selected from a pool of 81,000 students nationwide, recognized for exceptional leadership in championing the adoption of Google AI within the campus community.</p>
                     </article>
 
                     <article class="ext-feature-card">
-                        <span class="ext-year">2026 – 2027</span>
+                        <span class="ext-year">2026 – Present</span>
                         <h3 class="ext-title">Ikatan Koko Cici Jakarta</h3>
                         <p class="ext-issuer">DKI Jakarta Provincial Board · Graphic Design</p>
                         <p class="ext-body">Serving on the provincial executive board to lead creative branding and visual assets, promoting Jakarta tourism, Chinese-Indonesian cultural heritage, and youth social advocacy.</p>
                     </article>
 
                     <article class="ext-feature-card">
-                        <span class="ext-year">2024 – 2026</span>
+                        <span class="ext-year">2024 – Present</span>
                         <h3 class="ext-title">Forum Generasi Berencana (GenRe)</h3>
                         <p class="ext-issuer">BKKBN Central Jakarta · Human Resources</p>
                         <p class="ext-body">Supported internal talent management, onboarding, and training sessions for youth ambassadors advocating adolescent health and family planning across Central Jakarta.</p>
@@ -398,7 +405,7 @@
 
         <!-- Footer -->
         <footer class="bento-footer">
-            <p>&copy; 2026 Joceline Nadine Immanuella · Faculty of Computer Science, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }} · Faculty of Computer Science, Universitas Indonesia.</p>
             <p class="footer-sub">Designed with Semantic HTML5 &amp; Responsive CSS3 Bento Architecture.</p>
         </footer>
 

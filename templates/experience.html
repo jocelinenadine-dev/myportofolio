@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience - {{ name }}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="bento-container">
+        
+        <!-- Header -->
+        <header class="bento-header">
+            <div class="header-brand">
+                <a href="{% url 'main:show_main' %}" class="brand" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="brand-monogram">JN</span>
+                    <div class="brand-details">
+                        <span class="brand-name">{{ name }}</span>
+                        <span class="brand-role">{{ study_program }} · Universitas Indonesia</span>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="bento-nav">
+                <a href="{% url 'main:show_main' %}" class="nav-link">Profile</a>
+                <a href="{% url 'main:show_experience' %}" class="nav-link">Experience</a>
+            </nav>
+
+            <div class="header-status-badge">
+                <span class="status-pulse"></span>
+                <span>Open for Tech &amp; Youth Leadership</span>
+            </div>
+        </header>
+
+        <!-- Main Content: Experience -->
+        <main>
+            <section class="experience-section" id="experience">
+                <div class="container">
+                    <p class="section-kicker">My journey so far</p>
+                    <h1>Experience</h1>
+
+                    <div class="experience-grid">
+                        {% for experience in experience_list %}
+                            <article class="experience-card">
+                                <span class="experience-category">
+                                    {{ experience.get_category_display }}
+                                </span>
+                                <h2>{{ experience.title }}</h2>
+                                <p class="experience-description">
+                                    {{ experience.description }}
+                                </p>
+
+                                {% if experience.is_ongoing %}
+                                    <p class="experience-status">Ongoing <span style="display:none;">Sedang berlangsung</span></p>
+                                {% else %}
+                                    <p class="experience-status">Completed <span style="display:none;">Selesai</span></p>
+                                {% endif %}
+                            </article>
+                        {% empty %}
+                            <p class="empty-state">
+                                No experiences added yet. <span style="display:none;">Belum ada pengalaman yang ditambahkan.</span>
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bento-footer">
+            <p>&copy; 2026 {{ name }} · Faculty of Computer Science, Universitas Indonesia.</p>
+            <p class="footer-sub">Designed with Semantic HTML5 &amp; Responsive CSS3 Bento Architecture.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
