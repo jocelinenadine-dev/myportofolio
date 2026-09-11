@@ -31,8 +31,9 @@
             </div>
             
             <nav class="bento-nav">
-                <a href="{% url 'main:show_main' %}" class="nav-link">Profile</a>
+                <a href="{% url 'main:show_main' %}" class="nav-link active">Profile</a>
                 <a href="{% url 'main:show_experience' %}" class="nav-link">Experience</a>
+                <a href="{% url 'main:show_awards' %}" class="nav-link">Honors &amp; Awards</a>
             </nav>
             
             <div class="header-status-badge">
@@ -77,218 +78,79 @@
             </section>
 
             <!-- Academic Pillar 1: Universitas Indonesia (Span 6) -->
-            <article class="bento-tile tile-edu-ui">
-                <div class="tile-top-bar">
-                    <div>
-                        <span class="badge-outline">2026 – Present</span>
-                        <h2 class="tile-heading-lg">Universitas Indonesia</h2>
-                        <p class="tile-subheading">Bachelor of Science in Information Systems · FASILKOM UI</p>
+            <article class="bento-tile tile-edu-ui" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div class="tile-top-bar">
+                        <div>
+                            <span class="badge-outline">2026 – Present</span>
+                            <h2 class="tile-heading-lg" style="margin-top: 0.35rem;">Universitas Indonesia</h2>
+                            <p class="tile-subheading">Bachelor of Science in Information Systems · FASILKOM UI</p>
+                        </div>
                     </div>
+                    <p class="edu-brief" style="margin-top: 1rem; line-height: 1.65; color: var(--ink-body);">
+                        Focusing on Information Systems Architecture, Software Engineering, Database Systems, and campus technology leadership across student organizations.
+                    </p>
                 </div>
-                <p class="edu-brief">
-                    Focusing on Information Systems Architecture, Software Engineering, Business Process Optimization, and active leadership across campus technology platforms.
-                </p>
-
-                <div class="nested-roles-list">
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">BEM FASILKOM UI — Sports Department</h3>
-                            <span class="role-year">2026 – Present</span>
-                        </div>
-                        <p class="role-function">Department Staff &amp; Supporter Treasurer</p>
-                        <p class="role-summary">Managing Badminton sports club operations, athlete appreciation, and serving as Treasurer for <em>Laskar Biru Merah</em>.</p>
-                    </div>
-
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">SISTECH FASILKOM UI</h3>
-                            <span class="role-year">2026</span>
-                        </div>
-                        <p class="role-function">Front-End Engineering Intern</p>
-                        <p class="role-summary">Selected for an engineering fellowship, completed an industry visit to Grab Indonesia, and explored front-end web engineering and women in STEM.</p>
-                    </div>
-
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">COMPFEST 18 — FASILKOM UI</h3>
-                            <span class="role-year">2026 – Present</span>
-                        </div>
-                        <p class="role-function">Event Staff (Playground Main Event)</p>
-                        <p class="role-summary">Coordinating operations for the Playground Main Event at Indonesia's largest student-led tech festival, managing exhibitor and divisional workflows.</p>
-                    </div>
-
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">Open House FASILKOM UI 2025</h3>
-                            <span class="role-year">2025</span>
-                        </div>
-                        <p class="role-function">Documentation &amp; Engagement Crew (DEC)</p>
-                        <p class="role-summary">Directed creative multimedia content and promotional campaigns to introduce computer science programs to thousands of prospective students.</p>
-                    </div>
+                <div style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">Information Systems</span>
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">Software Engineering</span>
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">Database Architecture</span>
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">Campus Leadership</span>
                 </div>
             </article>
 
             <!-- Academic Pillar 2: SMAK 2 PENABUR Jakarta (Span 6) -->
-            <article class="bento-tile tile-edu-penabur">
-                <div class="tile-top-bar">
-                    <div>
-                        <span class="badge-outline">2022 – 2025</span>
-                        <h2 class="tile-heading-lg">SMAK 2 PENABUR Jakarta</h2>
-                        <p class="tile-subheading">Natural Sciences Program (MIPA)</p>
+            <article class="bento-tile tile-edu-penabur" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div class="tile-top-bar">
+                        <div>
+                            <span class="badge-outline">2022 – 2025</span>
+                            <h2 class="tile-heading-lg" style="margin-top: 0.35rem;">SMAK 2 PENABUR Jakarta</h2>
+                            <p class="tile-subheading">Natural Sciences Program (MIPA)</p>
+                        </div>
                     </div>
+                    <p class="edu-brief" style="margin-top: 1rem; line-height: 1.65; color: var(--ink-body);">
+                        Graduated with honors in Natural Sciences, awarded Gold Standardization for student governance leadership, and served as President of the Student Legislative Council (MPK).
+                    </p>
                 </div>
-                <p class="edu-brief">
-                    Graduated with honors in Natural Sciences, awarded Gold Standardization for student governance, and served as President across dual student executive councils.
-                </p>
-
-                <div class="nested-roles-list">
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">Majelis Perwakilan Kelas (MPK)</h3>
-                            <span class="role-year">2023 – 2024</span>
-                        </div>
-                        <p class="role-function">President / Chairperson</p>
-                        <p class="role-summary">Led the legislative council overseeing 10+ OSIS programs, established a standardized ID policy that became a lasting school legacy, and earned the Gold Standardization Award.</p>
-                    </div>
-
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">REXAR MINARA — Annual School Cup</h3>
-                            <span class="role-year">2025</span>
-                        </div>
-                        <p class="role-function">Head of Fundraising &amp; Finance</p>
-                        <p class="role-summary">Spearheaded an entrepreneurial fundraising strategy that successfully doubled event revenue compared to the prior year, marking the school's most successful cup.</p>
-                    </div>
-
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">Tim Pendidik Sebaya (Peer Educators)</h3>
-                            <span class="role-year">2023 – 2024</span>
-                        </div>
-                        <p class="role-function">President / Team Lead</p>
-                        <p class="role-summary">Certified in peer counseling, organized adolescent health campaigns, and fostered an inclusive school environment for student welfare.</p>
-                    </div>
-
-                    <div class="nested-role-card">
-                        <div class="role-row">
-                            <h3 class="role-name">REXAR NUMINOUS &amp; MARE NOSTRA</h3>
-                            <span class="role-year">2023 – 2024</span>
-                        </div>
-                        <p class="role-function">Publication &amp; Competition Staff</p>
-                        <p class="role-summary">Managed public relations and event operations for national inter-school competitions, including MonsoonSIM business simulation tournaments.</p>
-                    </div>
+                <div style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem; border-color: var(--accent-gold-soft); background: var(--accent-gold-light); color: var(--accent-gold-dark);">Gold Standardization</span>
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">Natural Sciences (MIPA)</span>
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">MPK President</span>
+                    <span class="skill-pill" style="font-size: 0.78rem; padding: 0.3rem 0.75rem;">Student Governance</span>
                 </div>
             </article>
 
-            <!-- External Leadership & Advocacy (Span 12) -->
-            <section class="bento-tile tile-external">
-                <div class="tile-header-group">
-                    <span class="badge-accent">Public Representation</span>
-                    <h2 class="tile-heading-lg">External Leadership &amp; Advocacy</h2>
-                    <p class="tile-desc">Technology ambassadorship, provincial cultural representation, and public health governance.</p>
+            <!-- Gateway 1: Experience (Span 6) -->
+            <section class="bento-tile" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 2rem 1.75rem; border-left: 4px solid var(--accent-sage);">
+                <div style="margin-bottom: 1.5rem;">
+                    <span class="badge-accent">Involvements</span>
+                    <h2 class="tile-heading-lg" style="margin-top: 0.4rem; font-size: 1.6rem;">Experience</h2>
                 </div>
-
-                <div class="external-grid">
-                    <article class="ext-feature-card">
-                        <span class="ext-year">2025 – 2026</span>
-                        <h3 class="ext-title">Google Student Ambassador</h3>
-                        <p class="ext-issuer">Google · Class of 2026</p>
-                        <p class="ext-body">Selected from a pool of 81,000 students nationwide, recognized for exceptional leadership in championing the adoption of Google AI within the campus community.</p>
-                    </article>
-
-                    <article class="ext-feature-card">
-                        <span class="ext-year">2026 – Present</span>
-                        <h3 class="ext-title">Ikatan Koko Cici Jakarta</h3>
-                        <p class="ext-issuer">DKI Jakarta Provincial Board · Graphic Design</p>
-                        <p class="ext-body">Serving on the provincial executive board to lead creative branding and visual assets, promoting Jakarta tourism, Chinese-Indonesian cultural heritage, and youth social advocacy.</p>
-                    </article>
-
-                    <article class="ext-feature-card">
-                        <span class="ext-year">2024 – Present</span>
-                        <h3 class="ext-title">Forum Generasi Berencana (GenRe)</h3>
-                        <p class="ext-issuer">BKKBN Central Jakarta · Human Resources</p>
-                        <p class="ext-body">Supported internal talent management, onboarding, and training sessions for youth ambassadors advocating adolescent health and family planning across Central Jakarta.</p>
-                    </article>
-                </div>
+                <a href="{% url 'main:show_experience' %}" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #ffffff; background: var(--accent-sage); padding: 0.85rem 1.4rem; border-radius: var(--radius-md); text-decoration: none; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(74, 107, 86, 0.25);">
+                    <span>Explore Experience</span>
+                    <span style="font-size: 1.15rem;">&rarr;</span>
+                </a>
             </section>
 
-            <!-- Honors & Awards (Span 12) -->
-            <section class="bento-tile tile-awards">
-                <div class="tile-header-group">
-                    <span class="badge-accent">Recognitions</span>
-                    <h2 class="tile-heading-lg">Honors &amp; Awards</h2>
-                    <p class="tile-desc">Distinctions achieved in business innovation, public ambassadorship, and health communication.</p>
+            <!-- Gateway 2: Honors & Awards (Span 6) -->
+            <section class="bento-tile" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 2rem 1.75rem; border-left: 4px solid var(--accent-gold);">
+                <div style="margin-bottom: 1.5rem;">
+                    <span class="badge-accent" style="background: var(--accent-gold-light); color: var(--accent-gold-dark); border: 1px solid var(--accent-gold-soft);">Recognitions</span>
+                    <h2 class="tile-heading-lg" style="margin-top: 0.4rem; font-size: 1.6rem;">Honors &amp; Awards</h2>
                 </div>
-
-                <div class="awards-rows-wrapper">
-                    <div class="award-item-row">
-                        <div class="award-badge-side">
-                            <span class="award-rank">1st Winner</span>
-                            <span class="award-date">2024</span>
-                        </div>
-                        <div class="award-text-side">
-                            <h3 class="award-title">Puteri Duta Generasi Berencana (GenRe)</h3>
-                            <p class="award-org">BKKBN Kota Jakarta Pusat</p>
-                            <p class="award-detail">Advanced through 3 audition stages and a 3-week quarantine. Awarded Best Group Talent and served as lead youth ambassador for youth advocacy.</p>
-                        </div>
-                    </div>
-
-                    <div class="award-item-row">
-                        <div class="award-badge-side">
-                            <span class="award-rank">Favorite Winner</span>
-                            <span class="award-date">2024</span>
-                        </div>
-                        <div class="award-text-side">
-                            <h3 class="award-title">Puteri Duta GenRe Provinsi DKI Jakarta</h3>
-                            <p class="award-org">BKKBN Provinsi DKI Jakarta</p>
-                            <p class="award-detail">Represented Central Jakarta at provincial level following a 1-month quarantine, talent showcase, and defense of 4 GenRe adolescent substance pillars.</p>
-                        </div>
-                    </div>
-
-                    <div class="award-item-row">
-                        <div class="award-badge-side">
-                            <span class="award-rank">Finalist</span>
-                            <span class="award-date">2026</span>
-                        </div>
-                        <div class="award-text-side">
-                            <h3 class="award-title">Koko Cici Jakarta 2026</h3>
-                            <p class="award-org">Ikatan Koko Cici Jakarta &amp; Dinas Pariwisata DKI Jakarta</p>
-                            <p class="award-detail">Completed an intensive selection process involving press conferences, interviews, talent exhibition, and Grand Final as Jakarta cultural ambassadors.</p>
-                        </div>
-                    </div>
-
-                    <div class="award-item-row">
-                        <div class="award-badge-side">
-                            <span class="award-rank">1st Place</span>
-                            <span class="award-date">2022</span>
-                        </div>
-                        <div class="award-text-side">
-                            <h3 class="award-title">Business Model Canvas (BMC) Competition</h3>
-                            <p class="award-org">National Inter-School Entrepreneurship Contest</p>
-                            <p class="award-detail">Team Leader; designed an end-to-end 9-block BMC for an innovative sustainable fruit and vegetable extract enterprise completed in 24 hours.</p>
-                        </div>
-                    </div>
-
-                    <div class="award-item-row">
-                        <div class="award-badge-side">
-                            <span class="award-rank">2nd Place</span>
-                            <span class="award-date">2024</span>
-                        </div>
-                        <div class="award-text-side">
-                            <h3 class="award-title">National TB Educational Video Competition</h3>
-                            <p class="award-org">Puskesmas Sawah Besar · World TB Day</p>
-                            <p class="award-detail">Led 5W+1H public health research, wrote the creative storyline, and directed video production in 2 days to raise community awareness on tuberculosis.</p>
-                        </div>
-                    </div>
-                </div>
+                <a href="{% url 'main:show_awards' %}" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #ffffff; background: var(--accent-gold-dark); padding: 0.85rem 1.4rem; border-radius: var(--radius-md); text-decoration: none; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(125, 89, 43, 0.25);">
+                    <span>Explore Honors &amp; Awards</span>
+                    <span style="font-size: 1.15rem;">&rarr;</span>
+                </a>
             </section>
 
             <!-- Skills & Capabilities (Span 12) -->
-            <section class="bento-tile tile-skills">
+            <section class="bento-tile tile-skills" style="grid-column: span 12;">
                 <div class="tile-header-group">
                     <span class="badge-accent">Core Capabilities</span>
                     <h2 class="tile-heading-lg">Skills &amp; Strategic Domains</h2>
-                    <p class="tile-desc">Interdisciplinary skill sets spanning technology engineering, organizational governance, and corporate strategy.</p>
+                    <p class="tile-desc">Interdisciplinary capabilities spanning technology engineering, organizational governance, and strategic communication.</p>
                 </div>
 
                 <div class="skills-cluster-grid">
@@ -313,9 +175,10 @@
                         </div>
                         <div class="pill-rack">
                             <span class="skill-pill">Team Leadership</span>
-                            <span class="skill-pill">Event Management</span>
+                            <span class="skill-pill">Event Operations</span>
                             <span class="skill-pill">Cross-functional Coordination</span>
-                            <span class="skill-pill">Peer Counseling</span>
+                            <span class="skill-pill">Peer Counseling &amp; Welfare</span>
+                            <span class="skill-pill">Treasury &amp; Budgeting</span>
                         </div>
                     </div>
 
@@ -326,6 +189,7 @@
                         </div>
                         <div class="pill-rack">
                             <span class="skill-pill">Python</span>
+                            <span class="skill-pill">Django (MVT)</span>
                             <span class="skill-pill">HTML5 &amp; CSS3</span>
                             <span class="skill-pill">Figma (UI/UX)</span>
                             <span class="skill-pill">Canva</span>
@@ -341,6 +205,7 @@
                         </div>
                         <div class="pill-rack">
                             <span class="skill-pill">Public Speaking</span>
+                            <span class="skill-pill">Youth Advocacy</span>
                             <span class="skill-pill">Presentation Design</span>
                             <span class="skill-pill">Community Engagement</span>
                             <span class="skill-pill">Bahasa Indonesia (Native)</span>
@@ -351,20 +216,28 @@
             </section>
 
             <!-- Let's Connect (Span 12) -->
-            <section class="bento-tile tile-connect">
+            <section class="bento-tile tile-connect" style="grid-column: span 12;">
                 <div class="tile-header-group">
-                    <span class="badge-accent">Let's Connect</span>
+                    <span class="badge-accent">Get in Touch</span>
                     <h2 class="tile-heading-lg">Professional Networks &amp; Media</h2>
-                    <p class="tile-desc">Direct channels to reach out for tech projects, student leadership, and collaborations.</p>
+                    <p class="tile-desc">Direct channels to reach out for tech initiatives, student leadership, and collaborations.</p>
                 </div>
 
                 <div class="social-cards-grid">
+                    <a href="mailto:jocelinenadine@gmail.com" class="social-channel-card">
+                        <div class="channel-info">
+                            <span class="channel-name">Email Inquiries</span>
+                            <span class="channel-handle">jocelinenadine@gmail.com</span>
+                        </div>
+                        <span class="channel-arrow">&rarr;</span>
+                    </a>
+
                     <a href="https://www.linkedin.com/in/jocelinenadine/" target="_blank" rel="noopener noreferrer" class="social-channel-card">
                         <div class="channel-info">
                             <span class="channel-name">LinkedIn</span>
                             <span class="channel-handle">jocelinenadine</span>
                         </div>
-                        <span class="channel-arrow">↗</span>
+                        <span class="channel-arrow">&nearr;</span>
                     </a>
 
                     <a href="https://github.com/jocelinenadine-dev" target="_blank" rel="noopener noreferrer" class="social-channel-card">
@@ -372,15 +245,7 @@
                             <span class="channel-name">GitHub</span>
                             <span class="channel-handle">jocelinenadine-dev</span>
                         </div>
-                        <span class="channel-arrow">↗</span>
-                    </a>
-
-                    <a href="mailto:jocelinenadine@gmail.com" class="social-channel-card">
-                        <div class="channel-info">
-                            <span class="channel-name">Email</span>
-                            <span class="channel-handle">jocelinenadine@gmail.com</span>
-                        </div>
-                        <span class="channel-arrow">↗</span>
+                        <span class="channel-arrow">&nearr;</span>
                     </a>
 
                     <a href="https://www.instagram.com/dduella/" target="_blank" rel="noopener noreferrer" class="social-channel-card">
@@ -388,15 +253,7 @@
                             <span class="channel-name">Instagram</span>
                             <span class="channel-handle">@dduella</span>
                         </div>
-                        <span class="channel-arrow">↗</span>
-                    </a>
-
-                    <a href="https://www.tiktok.com/@eunn01a_" target="_blank" rel="noopener noreferrer" class="social-channel-card">
-                        <div class="channel-info">
-                            <span class="channel-name">TikTok</span>
-                            <span class="channel-handle">@eunn01a_</span>
-                        </div>
-                        <span class="channel-arrow">↗</span>
+                        <span class="channel-arrow">&nearr;</span>
                     </a>
                 </div>
             </section>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience - {{ name }}</title>
+    <title>Experience — {{ name }}</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,14 +25,15 @@
                     <span class="brand-monogram">JN</span>
                     <div class="brand-details">
                         <span class="brand-name">{{ name }}</span>
-                        <span class="brand-role">{{ study_program }} · Universitas Indonesia</span>
+                        <span class="brand-role">S1 Sistem Informasi · Universitas Indonesia</span>
                     </div>
                 </a>
             </div>
             
             <nav class="bento-nav">
                 <a href="{% url 'main:show_main' %}" class="nav-link">Profile</a>
-                <a href="{% url 'main:show_experience' %}" class="nav-link">Experience</a>
+                <a href="{% url 'main:show_experience' %}" class="nav-link active">Experience</a>
+                <a href="{% url 'main:show_awards' %}" class="nav-link">Honors &amp; Awards</a>
             </nav>
 
             <div class="header-status-badge">
@@ -45,29 +46,54 @@
         <main>
             <section class="experience-section" id="experience">
                 <div class="container">
-                    <p class="section-kicker">My journey so far</p>
-                    <h1>Experience</h1>
+                    <div style="margin-bottom: 2rem;">
+                        <p class="section-kicker">Organizational &amp; Leadership Roles</p>
+                        <h1 style="margin: 0.3rem 0 0.5rem;">Experience</h1>
+                        <p style="color: var(--ink-muted); font-size: 0.95rem; max-width: 620px;">
+                            Active leadership across campus technology platforms, student executive boards, youth public representation, and social advocacy.
+                        </p>
+                    </div>
 
                     <div class="experience-grid">
                         {% for experience in experience_list %}
-                            <article class="experience-card">
-                                <span class="experience-category">
-                                    {{ experience.get_category_display }}
-                                </span>
-                                <h2>{{ experience.title }}</h2>
-                                <p class="experience-description">
-                                    {{ experience.description }}
-                                </p>
+                            {% if experience.is_ongoing %}
+                                <article class="experience-card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--accent-sage); background: #ffffff;">
+                            {% else %}
+                                <article class="experience-card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid #94a3b8; background: #fdfdfd;">
+                            {% endif %}
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                                        <span class="experience-category" style="font-size: 0.72rem;">
+                                            {{ experience.get_category_display }}
+                                        </span>
+                                        <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                                            <span style="font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); background: var(--bg-pill); padding: 0.18rem 0.55rem; border-radius: var(--radius-pill); border: 1px solid var(--border-subtle);">
+                                                {{ experience.period }}
+                                            </span>
+                                            {% if experience.is_ongoing %}
+                                                <span style="display: inline-block; font-size: 0.75rem; font-weight: 700; color: var(--accent-sage-dark); background: var(--accent-sage-light); border: 1px solid var(--accent-sage-tint); padding: 0.18rem 0.55rem; border-radius: var(--radius-pill);">
+                                                    Ongoing
+                                                </span>
+                                            {% else %}
+                                                <span style="display: inline-block; font-size: 0.75rem; font-weight: 700; color: #475569; background: #e2e8f0; border: 1px solid #cbd5e1; padding: 0.18rem 0.55rem; border-radius: var(--radius-pill);">
+                                                    Completed
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
 
-                                {% if experience.is_ongoing %}
-                                    <p class="experience-status">Ongoing <span style="display:none;">Sedang berlangsung</span></p>
-                                {% else %}
-                                    <p class="experience-status">Completed <span style="display:none;">Selesai</span></p>
-                                {% endif %}
+                                    <h2 style="font-size: 1.22rem; line-height: 1.35; margin: 0.2rem 0 0.6rem; color: var(--ink-title);">
+                                        {{ experience.title }}
+                                    </h2>
+
+                                    <p class="experience-description" style="font-size: 0.9rem; line-height: 1.65;">
+                                        {{ experience.description }}
+                                    </p>
+                                </div>
                             </article>
                         {% empty %}
                             <p class="empty-state">
-                                No experiences added yet. <span style="display:none;">Belum ada pengalaman yang ditambahkan.</span>
+                                Belum ada pengalaman yang ditambahkan.
                             </p>
                         {% endfor %}
                     </div>
