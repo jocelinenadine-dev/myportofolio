@@ -1,6 +1,5 @@
 from django.shortcuts import render
-
-from main.models import Experience
+from main.models import Experience, Award
 
 
 def show_main(request):
@@ -22,3 +21,11 @@ def show_experience(request):
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
+
+
+def show_awards(request):
+    context = {
+        "name": "Joceline Nadine Immanuella",
+        "award_list": Award.objects.all().order_by("-year", "-created_at"),
+    }
+    return render(request, "awards.html", context)

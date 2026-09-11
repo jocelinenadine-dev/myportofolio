@@ -840,6 +840,13 @@ body {
     background-color: var(--bg-pill, #E2ECE5);
 }
 
+.bento-nav .nav-link.active {
+    color: #FFFFFF;
+    background-color: var(--accent-sage, #4A6B56);
+    font-weight: 700;
+}
+
+
 .experience-section {
     padding: 2.5rem 1.5rem;
     background-color: var(--bg-card, #ffffff);
