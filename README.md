@@ -72,24 +72,94 @@ Alasan dan bagaimana elemen semantik ini sangat membantu saya dalam membangun we
 
 ---
 
+---
+
+### Tugas 2: Implementasi Model-View-Template (MVT) pada Django
+
+1. **Jelaskan alur yang terjadi ketika pengguna membuka halaman portofolio baru, mulai dari permintaan yang diterima proyek hingga data ditampilkan pada browser. Dalam jawabanmu, jelaskan peran urls.py proyek, urls.py aplikasi, view, model, dan template.**
+
+   **Jawaban:**  
+   Alur kerja siklus *Request-Response* ketika pengguna membuka halaman baru (*Honors & Awards* di rute `/awards/`):
+
+   - **Permintaan Pengguna (*HTTP GET Request*):**  
+     Pengguna mengeklik menu **Honors & Awards** di navbar atau memasukkan URL `http://localhost:8000/awards/` di browser. Browser mengirimkan sebuah *HTTP GET Request* ke server Django.
+   - **Pemeriksaan Rute Proyek (`portofolio/urls.py`):**  
+     Server Django menerima request dan memeriksa berkas `portofolio/urls.py`. Berkas ini mencocokkan awalan rute dan menggunakan `path("", include("main.urls"))` untuk meneruskan penanganan rute `awards/` ke berkas `urls.py` milik aplikasi `main`.
+   - **Pemeriksaan Rute Aplikasi (`main/urls.py`):**  
+     Di `main/urls.py`, Django menemukan pola rute `path("awards/", show_awards, name="show_awards")` yang memetakan URL tersebut ke fungsi controller `show_awards` di `views.py`.
+   - **Pengambilan Data di View (`main/views.py`):**  
+     Fungsi `show_awards(request)` mengeksekusi kueri ORM: `Award.objects.all().order_by("-year", "-created_at")`. View membungkus seluruh data penghargaan tersebut ke dalam *dictionary context* bersama data profil.
+   - **Akses Data oleh Model (`main/models.py`):**  
+     Model `Award` bertindak sebagai representasi skema tabel di database. Django ORM menerjemahkan pemanggilan model menjadi perintah SQL ke database SQLite (`SELECT * FROM main_award ...`) dan mengembalikan kumpulan data objek (*QuerySet*) ke view.
+   - **Rendering Antarmuka di Template (`templates/awards.html`):**  
+     View memanggil fungsi `render(request, "awards.html", context)`. Mesin Django Template Language (DTL) membaca template `awards.html`, memproses perulangan `{% for award in award_list %}` untuk menampilkan kartu-kartu penghargaan secara dinamis, atau menampilkan pesan di blok `{% empty %}` jika data belum ada.
+   - **Pengiriman Respons ke Browser (*HTTP Response*):**  
+     Server Django mengembalikan berkas HTML yang telah lengkap terisi data dinamis beserta kode status `200 OK` ke browser pengguna untuk ditampilkan.
+
+---
+
+2. **Mengapa data untuk bagian portofolio baru sebaiknya disimpan pada model dan tidak ditulis langsung di dalam template? Jelaskan dampaknya terhadap kemudahan pemeliharaan dan pengembangan aplikasi.**
+
+   **Jawaban:**  
+   Menyimpan data pada Model Django (`models.py`) memberikan banyak keuntungan dibandingkan mengetik data secara manual (*hard-coded*) di dalam template HTML:
+
+   - **Pemisahan Antara Data dan Tampilan (*Separation of Concerns*):**  
+     Pemisahan antara lapisan data (`models.py`), logika pemrosesan (`views.py`), dan tampilan antarmuka (`templates/`) membuat struktur proyek lebih rapi, terorganisir, dan mudah dikelola.
+   - **Kemudahan Pemeliharaan (*Maintainability*):**  
+     Ketika ingin menambah, mengedit, atau menghapus riwayat penghargaan, kita cukup melakukannya melalui antarmuka **Django Admin** (`/admin/`) tanpa perlu menyentuh atau membongkar kode HTML sama sekali.
+   - **Efisiensi Kode (*DRY - Don't Repeat Yourself*):**  
+     Struktur tampilan kartu penghargaan cukup ditulis satu kali di template menggunakan looping `{% for %}`. Jika ingin mengubah desain kartu, kita cukup mengubah satu blok kode template tersebut saja dan perubahan otomatis berlaku untuk semua data.
+   - **Integritas dan Validasi Data (*Data Integrity*):**  
+     Model memastikan setiap data yang masuk sesuai dengan tipe dan aturan yang ditentukan (misalnya batasan panjang karakter di `CharField`, pilihan kategori pada `choices`, dan tanggal otomatis pada `DateTimeField`).
+   - **Skalabilitas dan Fleksibilitas Fitur (*Scalability*):**  
+     Data yang ada di database dapat dengan mudah diurutkan, difilter per kategori, dicari, maupun diubah ke dalam format JSON/API untuk kebutuhan integrasi aplikasi ke depannya.
+
+---
+
+3. **Apa perbedaan fungsi makemigrations dan migrate pada Django? Berikan contoh perubahan model yang mengharuskanmu menjalankan kedua perintah tersebut.**
+
+   **Jawaban:**  
+   Perbedaan perintah `makemigrations` dan `migrate` di Django:
+
+   | Aspek | `python manage.py makemigrations` | `python manage.py migrate` |
+   | :--- | :--- | :--- |
+   | **Fungsi Utama** | Mendeteksi perubahan pada `models.py` dan membuat berkas skrip migrasi baru (*migration blueprint*). | Menjalankan instruksi migrasi tersebut untuk memperbarui skema fisik tabel pada database. |
+   | **Lokasi Operasi** | Beroperasi pada level kode lokal (menghasilkan file Python di direktori `main/migrations/`). | Beroperasi langsung pada sistem database (`db.sqlite3`). |
+   | **Dampak ke Database** | **Belum** mengubah struktur tabel database. | Mengubah, membuat, atau menghapus tabel dan kolom database secara nyata. |
+   | **Analogi** | Seperti **Arsitek** yang merancang cetak biru denah ruangan di atas kertas. | Seperti **Tukang Bangunan** yang membangun ruangan fisik sesuai cetak biru tersebut. |
+
+   **Contoh Perubahan Model yang Mengharuskan Kedua Perintah Tersebut:**
+
+   - **Contoh 1 — Pembuatan Model Baru:**  
+     1. Menambahkan definisi kelas model `Award` pada `main/models.py`.  
+     2. Menjalankan `python manage.py makemigrations main` untuk menghasilkan berkas cetak biru `0002_award.py`.  
+     3. Menjalankan `python manage.py migrate` agar Django mengeksekusi berkas tersebut dan membentuk tabel `main_award` di database.  
+   - **Contoh 2 — Penambahan Field/Kolom Baru:**  
+     1. Menambahkan atribut baru pada model `Award`, misalnya tautan sertifikat: `certificate_url = models.URLField(blank=True, null=True)`.  
+     2. Menjalankan `makemigrations` untuk merekam penambahan kolom baru tersebut ke berkas migrasi.  
+     3. Menjalankan `migrate` untuk menyisipkan kolom `certificate_url` ke tabel database yang sudah ada.
+
+---
+
 ### AI Disclosure (Pernyataan Penggunaan Kecerdasan Buatan)
 
-Dalam pengerjaan Tugas 1 Pemrograman Berbasis Platform (PBP) ini, saya memegang teguh prinsip kejujuran akademik. Berikut adalah penjelasan terbuka dan rinci mengenai pemanfaatan kecerdasan buatan selama proses pengerjaan:
+Dalam pengerjaan Tugas Individu Pemrograman Berbasis Platform (PBP) Semester Gasal 2026/2027, saya menjunjung tinggi integritas dan kejujuran akademik. Berikut adalah penjelasan terbuka mengenai pemanfaatan alat bantu kecerdasan buatan:
 
 - **Alat Bantu yang Digunakan:** Gemini (Google AI).
-- **Peran AI dalam Proses Belajar Saya:**
-  Karena materi perkuliahan PBP (seperti arsitektur framework Django, struktur file proyek, dan styling CSS modern) merupakan hal yang baru bagi saya di semester ini, saya memanfaatkan Gemini sebagai **teman belajar dan tutor diskusi mandiri (*study companion*)** untuk membantu saya memahami alur pengerjaan tugas dari awal secara bertahap di luar jam kelas.
+- **Peran AI dalam Proses Belajar:**
+  Sebagai mahasiswi Sistem Informasi, saya memosisikan AI secara etis sebagai **teman belajar dan rekan diskusi konsep (*study companion / peer tutor*)** untuk membantu saya memahami alur framework Django yang baru saya pelajari di semester ini. AI tidak digunakan untuk menyalin kode secara buta tanpa pemahaman.
 
-- **Rincian Bantuan yang Saya Pelajari Bersama Gemini:**
-  1. **Memahami Fungsi Setiap File dalam Proyek Django dari Nol:**
-     - Karena awalnya saya belum paham struktur bawaan Django, saya bertanya ke Gemini untuk memahami apa fungsi masing-masing file yang ada di proyek, seperti apa fungsi `manage.py`, `settings.py`, `urls.py`, `views.py`, serta apa bedanya folder `templates/` (untuk file HTML) dan folder `static/` (untuk file CSS dan gambar).
-     - Saya juga mempelajari file apa saja yang harus diubah saat ingin menghubungkan tampilan HTML (`views.py` dan `urls.py`) dan cara mengatur `STATICFILES_DIRS` di `settings.py` agar CSS dan gambar bisa terbaca saat di-deploy ke PWS.
-  2. **Mempelajari dan Menghafal Sintaks CSS yang Baru:**
-     - Saya berkonsultasi mengenai bagaimana cara kerja CSS Grid untuk membuat layout Bento (seperti fungsi `repeat(12, 1fr)`, `grid-column: span`, dan `gap`), cara mengatur Flexbox agar elemen berada di tengah secara rapi, serta bagaimana cara menuliskan Media Queries (`@media (max-width: ...px)`) untuk membuat tampilan web responsif di HP.
-  3. **Mengatasi Tampilan yang Rusak / Error (*Troubleshooting Layout*):**
-     - Saat awal mencoba tampilan di layar HP, teks email saya sempat keluar dari kotak kartu dan layarnya bisa tergeser ke kanan. Saya menanyakan ke Gemini kenapa hal itu bisa terjadi, dan dari penjelasan tersebut saya belajar cara mengatasinya menggunakan properti `white-space: nowrap`, `overflow-x: hidden`, dan merapikan padding.
-  4. **Konsultasi Pemilihan Warna Desain:**
-     - Saya meminta saran perpaduan kode warna HEX untuk tema *Sage Green* yang lembut agar tampilan portofolio terlihat bersih, modern, dan tetap mudah dibaca.
+- **Rincian Bantuan yang Dipelajari Bersama Gemini:**
+  1. **Tugas 1 (Web Statis HTML5 & CSS3 Bento Grid):**
+     - Berdiskusi mengenai struktur semantik HTML5 (`<header>`, `<main>`, `<section>`, `<article>`, `<footer>`).
+     - Mempelajari cara kerja CSS Grid untuk tata letak Bento (`grid-template-columns: repeat(12, 1fr)`, `grid-column: span`) dan Media Queries responsif agar tampilan web rapi di layar ponsel.
+     - Konsultasi pemilihan palet warna *Sage Green* dan *Warm Gold* yang elegan.
+  2. **Tugas 2 (Implementasi MVT pada Django):**
+     - Memahami alur kerja siklus *Model-View-Template* (MVT) pada Django.
+     - Mempelajari cara kerja *Django Admin* (`admin.py`) untuk mengelola data secara dinamis dari tampilan web.
+     - Merancang skema model `Award` (penggunaan `UUIDField`, `CharField`, `choices`, `DateTimeField`), pendaftaran rute di `urls.py`, serta penggunaan tag DTL `{% for %}` dan `{% empty %}` di template `awards.html`.
+     - Menyusun skenario pengujian otomatis (*Unit Testing*) menggunakan `TestCase` untuk memastikan URL berstatus 200 OK, template terpanggil dengan benar, dan data tampil sesuai database.
 
-- **Komitmen Pengerjaan Mandiri:**
-  Semua penjelasan alur file, konsep struktur Django, dan saran sintaks CSS dari Gemini selalu saya baca dan pelajari terlebih dahulu agar saya benar-benar mengerti fungsinya. Seluruh penulisan kode HTML semantik, perancangan tata letak Bento Grid, penulisan file CSS, pengisian seluruh isi portofolio, hingga proses pengujian di browser dan *deployment* ke server PWS CS UI saya kerjakan dan pahami secara mandiri.
+- **Komitmen Pemahaman Mandiri:**
+  Setiap konsep, kode logika, skema basis data, dan konfigurasi yang dirancang bersama Gemini telah saya pelajari secara bertahap, saya jalankan dan uji mandiri di terminal dan browser lokal, serta dipastikan lulus 100% pada `python manage.py test` sebelum diunggah ke GitHub dan server PWS Fasilkom UI.
+
