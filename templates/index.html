@@ -11,9 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=2.1">
 </head>
 <body>
+
+    <!-- Ambient Background Bubbles -->
+    <div class="ambient-bubble bubble-1"></div>
+    <div class="ambient-bubble bubble-2"></div>
+    <div class="ambient-bubble bubble-3"></div>
 
     <!-- Main Container -->
     <div class="bento-container">
@@ -48,7 +53,11 @@
             <!-- Hero Profile (Span 12) -->
             <section class="bento-tile tile-hero">
                 <div class="hero-content-col">
-                    <span class="badge-accent">Undergraduate Portfolio</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
+                        <span class="badge-accent">Undergraduate Portfolio</span>
+                        <span style="display: inline-block; font-size: 0.76rem; font-weight: 700; color: var(--accent-sage-dark); background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 0.25rem 0.75rem; border-radius: var(--radius-pill); box-shadow: 0 2px 6px rgba(0,0,0,0.03);">S1 Sistem Informasi</span>
+                        <span style="display: inline-block; font-size: 0.76rem; font-weight: 700; color: var(--accent-sage-dark); background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 0.25rem 0.75rem; border-radius: var(--radius-pill); box-shadow: 0 2px 6px rgba(0,0,0,0.03);">FASILKOM UI</span>
+                    </div>
                     <h1 class="hero-title">Bridging Technology, Business Strategy, and Youth Empowerment.</h1>
                     <p class="hero-bio">
                         {{ bio }}
@@ -122,26 +131,48 @@
             </article>
 
             <!-- Gateway 1: Experience (Span 6) -->
-            <section class="bento-tile" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 2rem 1.75rem; border-left: 4px solid var(--accent-sage);">
-                <div style="margin-bottom: 1.5rem;">
-                    <span class="badge-accent">Involvements</span>
-                    <h2 class="tile-heading-lg" style="margin-top: 0.4rem; font-size: 1.6rem;">Experience</h2>
+            <section class="bento-tile" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 2.25rem 2rem; border-left: 5px solid var(--accent-sage);">
+                <div style="width: 100%; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span class="badge-accent">Involvements</span>
+                        <span class="date-bubble-pill" style="font-size: 0.74rem;">11 Roles</span>
+                    </div>
+                    <h2 class="tile-heading-lg" style="margin-top: 0.3rem; font-size: 1.65rem;">Experience</h2>
+                    <p style="font-size: 0.92rem; color: var(--ink-muted); margin-top: 0.4rem; line-height: 1.55;">
+                        Leadership across campus tech platforms, student legislative boards, and youth public representation.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem;">
+                        <span class="badge-bubble-org" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #2E4D3B; background: #EAF4ED; border: 1.5px solid #BDDCC4; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(74, 107, 86, 0.10);">5 Organizations</span>
+                        <span class="badge-bubble-amb" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #7D592B; background: #FAF3E8; border: 1.5px solid #E6D2B5; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(125, 89, 43, 0.10);">1 Ambassador</span>
+                        <span class="badge-bubble-com" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #1E3A5F; background: #EFF5FA; border: 1.5px solid #C0D7EB; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.10);">5 Committees</span>
+                    </div>
                 </div>
-                <a href="{% url 'main:show_experience' %}" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #ffffff; background: var(--accent-sage); padding: 0.85rem 1.4rem; border-radius: var(--radius-md); text-decoration: none; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(74, 107, 86, 0.25);">
+                <a href="{% url 'main:show_experience' %}" class="gateway-button-sage">
                     <span>Explore Experience</span>
-                    <span style="font-size: 1.15rem;">&rarr;</span>
+                    <span class="gateway-arrow">&rarr;</span>
                 </a>
             </section>
 
             <!-- Gateway 2: Honors & Awards (Span 6) -->
-            <section class="bento-tile" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 2rem 1.75rem; border-left: 4px solid var(--accent-gold);">
-                <div style="margin-bottom: 1.5rem;">
-                    <span class="badge-accent" style="background: var(--accent-gold-light); color: var(--accent-gold-dark); border: 1px solid var(--accent-gold-soft);">Recognitions</span>
-                    <h2 class="tile-heading-lg" style="margin-top: 0.4rem; font-size: 1.6rem;">Honors &amp; Awards</h2>
+            <section class="bento-tile" style="grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 2.25rem 2rem; border-left: 5px solid var(--accent-gold);">
+                <div style="width: 100%; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span class="badge-accent" style="background: var(--accent-gold-light); color: var(--accent-gold-dark); border: 1px solid var(--accent-gold-soft);">Recognitions</span>
+                        <span class="date-bubble-pill" style="font-size: 0.74rem;">5 Accolades</span>
+                    </div>
+                    <h2 class="tile-heading-lg" style="margin-top: 0.3rem; font-size: 1.65rem;">Honors &amp; Awards</h2>
+                    <p style="font-size: 0.92rem; color: var(--ink-muted); margin-top: 0.4rem; line-height: 1.55;">
+                        Competitive distinctions in youth ambassadorship, business innovation, and public health governance.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem;">
+                        <span class="badge-bubble-amb" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #7D592B; background: #FAF3E8; border: 1.5px solid #E6D2B5; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(125, 89, 43, 0.10);">5 Accolades</span>
+                        <span class="badge-bubble-org" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #2E4D3B; background: #EAF4ED; border: 1.5px solid #BDDCC4; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(74, 107, 86, 0.10);">Provincial Level</span>
+                        <span class="badge-bubble-com" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #1E3A5F; background: #EFF5FA; border: 1.5px solid #C0D7EB; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.10);">National Contests</span>
+                    </div>
                 </div>
-                <a href="{% url 'main:show_awards' %}" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #ffffff; background: var(--accent-gold-dark); padding: 0.85rem 1.4rem; border-radius: var(--radius-md); text-decoration: none; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(125, 89, 43, 0.25);">
+                <a href="{% url 'main:show_awards' %}" class="gateway-button-gold">
                     <span>Explore Honors &amp; Awards</span>
-                    <span style="font-size: 1.15rem;">&rarr;</span>
+                    <span class="gateway-arrow">&rarr;</span>
                 </a>
             </section>
 

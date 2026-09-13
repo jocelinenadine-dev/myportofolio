@@ -11,9 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=2.1">
 </head>
 <body>
+
+    <!-- Ambient Background Bubbles -->
+    <div class="ambient-bubble bubble-1"></div>
+    <div class="ambient-bubble bubble-2"></div>
+    <div class="ambient-bubble bubble-3"></div>
 
     <!-- Main Container -->
     <div class="bento-container">
@@ -46,47 +51,60 @@
         <main>
             <section class="experience-section" id="experience">
                 <div class="container">
-                    <div style="margin-bottom: 2rem;">
-                        <p class="section-kicker">Organizational &amp; Leadership Roles</p>
-                        <h1 style="margin: 0.3rem 0 0.5rem;">Experience</h1>
-                        <p style="color: var(--ink-muted); font-size: 0.95rem; max-width: 620px;">
+                    <div>
+                        <span class="section-kicker">Organizational &amp; Leadership Roles</span>
+                        <h1>Experience</h1>
+                        <p style="color: var(--ink-muted); font-size: 0.95rem; max-width: 640px; line-height: 1.65;">
                             Active leadership across campus technology platforms, student executive boards, youth public representation, and social advocacy.
                         </p>
+                    </div>
+
+                    <!-- Cute Overview Bubble Rack -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1.15rem; margin-bottom: 1.85rem;">
+                        <span style="display: inline-flex; align-items: center; font-size: 0.76rem; font-weight: 800; color: var(--ink-title); background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">All Roles (11)</span>
+                        <span class="badge-bubble-org" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #2E4D3B; background: #EAF4ED; border: 1.5px solid #BDDCC4; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(74, 107, 86, 0.10);">Organization (5)</span>
+                        <span class="badge-bubble-amb" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #7D592B; background: #FAF3E8; border: 1.5px solid #E6D2B5; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(125, 89, 43, 0.10);">Ambassador (1)</span>
+                        <span class="badge-bubble-com" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #1E3A5F; background: #EFF5FA; border: 1.5px solid #C0D7EB; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.10);">Committee (5)</span>
                     </div>
 
                     <div class="experience-grid">
                         {% for experience in experience_list %}
                             {% if experience.is_ongoing %}
-                                <article class="experience-card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid var(--accent-sage); background: #ffffff;">
+                                <article class="experience-card experience-card-ongoing" style="display: flex; flex-direction: column; justify-content: space-between;">
                             {% else %}
-                                <article class="experience-card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid #94a3b8; background: #fdfdfd;">
+                                <article class="experience-card experience-card-completed" style="display: flex; flex-direction: column; justify-content: space-between;">
                             {% endif %}
                                 <div>
                                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
-                                        <span class="experience-category" style="font-size: 0.72rem;">
-                                            {{ experience.get_category_display }}
-                                        </span>
+                                        {% if experience.category == 'organization' %}
+                                            <span class="badge-bubble-org" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #2E4D3B; background: #EAF4ED; border: 1.5px solid #BDDCC4; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(74, 107, 86, 0.10);">{{ experience.get_category_display }}</span>
+                                        {% elif experience.category == 'ambassador' %}
+                                            <span class="badge-bubble-amb" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #7D592B; background: #FAF3E8; border: 1.5px solid #E6D2B5; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(125, 89, 43, 0.10);">{{ experience.get_category_display }}</span>
+                                        {% else %}
+                                            <span class="badge-bubble-com" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #1E3A5F; background: #EFF5FA; border: 1.5px solid #C0D7EB; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.10);">{{ experience.get_category_display }}</span>
+                                        {% endif %}
+
                                         <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
-                                            <span style="font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); background: var(--bg-pill); padding: 0.18rem 0.55rem; border-radius: var(--radius-pill); border: 1px solid var(--border-subtle);">
+                                            <span class="date-bubble-pill" style="font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); background: #FFFFFF; padding: 0.28rem 0.75rem; border-radius: 9999px; border: 1.5px solid var(--border-subtle); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03); display: inline-flex; align-items: center;">
                                                 {{ experience.period }}
                                             </span>
                                             {% if experience.is_ongoing %}
-                                                <span style="display: inline-block; font-size: 0.75rem; font-weight: 700; color: var(--accent-sage-dark); background: var(--accent-sage-light); border: 1px solid var(--accent-sage-tint); padding: 0.18rem 0.55rem; border-radius: var(--radius-pill);">
+                                                <span class="status-badge-ongoing" style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.76rem; font-weight: 800; color: #166534; background: #EAF7EE; border: 1.5px solid #A3E0B5; padding: 0.28rem 0.8rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(34, 197, 94, 0.12);">
+                                                    <span class="status-dot-pulse" style="width: 7px; height: 7px; background-color: #22c55e; border-radius: 50%; display: inline-block;"></span>
                                                     Ongoing
                                                 </span>
                                             {% else %}
-                                                <span style="display: inline-block; font-size: 0.75rem; font-weight: 700; color: #475569; background: #e2e8f0; border: 1px solid #cbd5e1; padding: 0.18rem 0.55rem; border-radius: var(--radius-pill);">
+                                                <span class="status-badge-completed" style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.76rem; font-weight: 800; color: #475569; background: #F1F5F9; border: 1.5px solid #CBD5E1; padding: 0.28rem 0.8rem; border-radius: 9999px;">
+                                                    <span class="status-dot-gray" style="width: 7px; height: 7px; background-color: #94a3b8; border-radius: 50%; display: inline-block;"></span>
                                                     Completed
                                                 </span>
                                             {% endif %}
                                         </div>
                                     </div>
 
-                                    <h2 style="font-size: 1.22rem; line-height: 1.35; margin: 0.2rem 0 0.6rem; color: var(--ink-title);">
-                                        {{ experience.title }}
-                                    </h2>
+                                    <h2>{{ experience.title }}</h2>
 
-                                    <p class="experience-description" style="font-size: 0.9rem; line-height: 1.65;">
+                                    <p class="experience-description">
                                         {{ experience.description }}
                                     </p>
                                 </div>

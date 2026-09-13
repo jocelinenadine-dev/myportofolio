@@ -10,7 +10,7 @@ class MainTest(TestCase):
         self.experience = Experience.objects.create(
             title="Asisten Riset Sistem Informasi",
             description="Membantu riset pemodelan arsitektur sistem informasi enterprise.",
-            category="volunteer",
+            category="organization",
         )
         self.award = Award.objects.create(
             title="Puteri Duta GenRe Kota Jakarta Pusat",
@@ -38,7 +38,7 @@ class MainTest(TestCase):
 
     def test_experience_model(self):
         self.assertEqual(str(self.experience), "Asisten Riset Sistem Informasi")
-        self.assertEqual(self.experience.category, "volunteer")
+        self.assertEqual(self.experience.category, "organization")
         self.assertTrue(self.experience.is_ongoing)
 
 
@@ -49,7 +49,7 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "experience.html")
         self.assertContains(response, self.experience.title)
         self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Volunteer")
+        self.assertContains(response, "Organization")
         self.assertContains(response, "Ongoing")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
         self.assertContains(response, f'href="{reverse("main:show_awards")}"')
