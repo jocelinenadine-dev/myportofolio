@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<title>Tambah Penghargaan — {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+<main>
+    <section class="experience-section" id="add-award">
+        <div class="container" style="max-width: 760px; margin: 0 auto;">
+            <div style="margin-bottom: 1.75rem;">
+                <span class="section-kicker">Input Prestasi Baru</span>
+                <h1>Tambah Penghargaan</h1>
+                <p style="color: var(--ink-muted); font-size: 0.95rem; line-height: 1.65; margin-top: 0.35rem;">
+                    Tambahkan pencapaian kompetisi, penghargaan kepemudaan, atau advokasi publik langsung ke database portofolio.
+                </p>
+            </div>
+
+            <form method="post" class="custom-bento-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="form-error">
+                                {% for error in field.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions-row">
+                    <button type="submit" class="button-submit-pill">
+                        <span>Simpan Penghargaan</span>
+                        <span class="gateway-arrow">&rarr;</span>
+                    </button>
+                    <a href="{% url 'main:show_awards' %}" class="button-cancel-pill">
+                        Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock content %}

@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css?v=3.0">
+    
+    {% block meta %}
+    <title>{{ name }} — Portfolio</title>
+    {% endblock meta %}
+</head>
+<body>
+
+    <!-- Ambient Background Bubbles -->
+    <div class="ambient-bubble bubble-1"></div>
+    <div class="ambient-bubble bubble-2"></div>
+    <div class="ambient-bubble bubble-3"></div>
+
+    <!-- Main Container -->
+    <div class="bento-container">
+        
+        <!-- Header -->
+        <header class="bento-header">
+            <div class="header-brand">
+                <a href="{% url 'main:show_main' %}" class="brand" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="brand-monogram">JN</span>
+                    <div class="brand-details">
+                        <span class="brand-name">{{ name|default:"Joceline Nadine Immanuella" }}</span>
+                        <span class="brand-role">S1 Sistem Informasi · Universitas Indonesia</span>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="bento-nav">
+                <a href="{% url 'main:show_main' %}" class="nav-link {% if request.resolver_match.url_name == 'show_main' %}active{% endif %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}" class="nav-link {% if request.resolver_match.url_name == 'show_experience' %}active{% endif %}">Experience</a>
+                <a href="{% url 'main:show_awards' %}" class="nav-link {% if request.resolver_match.url_name == 'show_awards' or request.resolver_match.url_name == 'create_award' %}active{% endif %}">Honors &amp; Awards</a>
+            </nav>
+            
+            <div class="header-status-badge">
+                <span class="status-pulse"></span>
+                <span>Open for Tech &amp; Youth Leadership</span>
+            </div>
+        </header>
+
+        <!-- Flash Messages Notification -->
+        {% if messages %}
+            <div class="messages-container" style="margin-bottom: 1.5rem;">
+                {% for message in messages %}
+                    <div class="alert-pill alert-{{ message.tags|default:'info' }}">
+                        <span class="alert-dot"></span>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Content Block -->
+        {% block content %}
+        {% endblock content %}
+
+        <!-- Footer -->
+        <footer class="bento-footer">
+            <p>&copy; 2026 {{ name|default:"Joceline Nadine Immanuella" }} · Faculty of Computer Science, Universitas Indonesia.</p>
+            <p class="footer-sub">Designed with Semantic HTML5 &amp; Responsive CSS3 Bento Architecture.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
