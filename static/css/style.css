@@ -1452,7 +1452,36 @@ body {
     border-color: var(--ink-title);
 }
 
-/* Delete Button on Card (Capsule Pill) */
+/* Card Action Buttons (Capsule Pills) */
+.award-card-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.button-edit-pill {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-heading);
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--accent-sage-dark);
+    background: var(--accent-sage-soft);
+    border: 1.5px solid var(--border-color);
+    padding: 0.32rem 0.85rem;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button-edit-pill:hover {
+    background: #D5E4D9;
+    color: #1F3628;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 77, 59, 0.12);
+}
+
 .button-delete-pill {
     display: inline-flex;
     align-items: center;
