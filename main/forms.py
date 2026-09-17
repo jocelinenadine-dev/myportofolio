@@ -1,5 +1,52 @@
 from django.forms import ModelForm, TextInput, Textarea, Select
-from main.models import Award
+from main.models import Award, Experience
+
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+        fields = [
+            "title",
+            "category",
+            "description",
+            "thumbnail",
+        ]
+
+        labels = {
+            "title": "Posisi / Peran Organisasi",
+            "category": "Kategori Pengalaman",
+            "description": "Deskripsi & Tanggung Jawab",
+            "thumbnail": "URL Thumbnail / Logo (Opsional)",
+        }
+
+        widgets = {
+            "title": TextInput(
+                attrs={
+                    "placeholder": "Contoh: Staff of Public Relations BEM Fasilkom UI",
+                    "maxlength": 255,
+                    "class": "form-input",
+                }
+            ),
+            "category": Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+            "description": Textarea(
+                attrs={
+                    "placeholder": "Jelaskan peran, tanggung jawab, dan dampak dari pengalaman ini...",
+                    "rows": 4,
+                    "class": "form-textarea",
+                }
+            ),
+            "thumbnail": TextInput(
+                attrs={
+                    "placeholder": "https://example.com/logo.png",
+                    "class": "form-input",
+                }
+            ),
+        }
+
 
 class AwardForm(ModelForm):
     class Meta:
