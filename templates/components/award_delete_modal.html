@@ -1,4 +1,10 @@
 <div class="award-card-actions">
+    <a href="{% url 'main:edit_award' award.id %}"
+       class="button-edit-pill"
+       aria-label="Edit {{ award.title }}"
+       title="Edit Penghargaan">
+        Edit
+    </a>
     <button type="button"
             class="button-delete-pill"
             popovertarget="delete-award-{{ award.id }}"

@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 
 {% block meta %}
-<title>Tambah Penghargaan — {{ name }}</title>
+<title>{% if is_edit %}Ubah Penghargaan{% else %}Tambah Penghargaan{% endif %} — {{ name }}</title>
 {% endblock meta %}
 
 {% block content %}
 <main>
-    <section class="experience-section" id="add-award">
+    <section class="experience-section" id="form-award">
         <div class="container" style="max-width: 760px; margin: 0 auto;">
             <div style="margin-bottom: 1.75rem;">
-                <span class="section-kicker">Input Prestasi Baru</span>
-                <h1>Tambah Penghargaan</h1>
+                <span class="section-kicker">{% if is_edit %}Pembaruan Data Prestasi{% else %}Input Prestasi Baru{% endif %}</span>
+                <h1>{% if is_edit %}Ubah Penghargaan{% else %}Tambah Penghargaan{% endif %}</h1>
                 <p style="color: var(--ink-muted); font-size: 0.95rem; line-height: 1.65; margin-top: 0.35rem;">
-                    Tambahkan pencapaian kompetisi, penghargaan kepemudaan, atau advokasi publik langsung ke database portofolio.
+                    {% if is_edit %}
+                        Perbarui rincian penghargaan, institusi, atau deskripsi pencapaian di bawah ini.
+                    {% else %}
+                        Tambahkan pencapaian kompetisi, penghargaan kepemudaan, atau advokasi publik langsung ke database portofolio.
+                    {% endif %}
                 </p>
             </div>
 
@@ -37,7 +41,7 @@
 
                 <div class="form-actions-row">
                     <button type="submit" class="button-submit-pill">
-                        <span>Simpan Penghargaan</span>
+                        <span>{% if is_edit %}Simpan Perubahan{% else %}Simpan Penghargaan{% endif %}</span>
                         <span class="gateway-arrow">&rarr;</span>
                     </button>
                     <a href="{% url 'main:show_awards' %}" class="button-cancel-pill">
