@@ -8,21 +8,47 @@
 <main>
     <section class="experience-section" id="experience">
         <div class="container">
-            <div>
-                <span class="section-kicker">Organizational &amp; Leadership Roles</span>
-                <h1>Experience</h1>
-                <p style="color: var(--ink-muted); font-size: 0.95rem; max-width: 640px; line-height: 1.65;">
-                    Active leadership across campus technology platforms, student executive boards, youth public representation, and social advocacy.
-                </p>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <span class="section-kicker">Organizational &amp; Leadership Roles</span>
+                    <h1>Experience</h1>
+                    <p style="color: var(--ink-muted); font-size: 0.95rem; max-width: 640px; line-height: 1.65;">
+                        Active leadership across campus technology platforms, student executive boards, youth public representation, and social advocacy.
+                    </p>
+                </div>
+                <a href="{% url 'main:create_experience' %}" class="button-add-pill">
+                    <span style="font-size: 1.1rem; line-height: 1;">+</span>
+                    <span>Tambah Pengalaman</span>
+                </a>
             </div>
 
             <!-- Cute Overview Bubble Rack -->
-            <div style="display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1.15rem; margin-bottom: 1.85rem;">
-                <span style="display: inline-flex; align-items: center; font-size: 0.76rem; font-weight: 800; color: var(--ink-title); background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">All Roles (11)</span>
-                <span class="badge-bubble-org" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #2E4D3B; background: #EAF4ED; border: 1.5px solid #BDDCC4; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(74, 107, 86, 0.10);">Organization (5)</span>
-                <span class="badge-bubble-amb" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #7D592B; background: #FAF3E8; border: 1.5px solid #E6D2B5; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(125, 89, 43, 0.10);">Ambassador (1)</span>
-                <span class="badge-bubble-com" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #1E3A5F; background: #EFF5FA; border: 1.5px solid #C0D7EB; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.10);">Committee (5)</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.85rem; margin-bottom: 1.5rem;">
+                <span style="display: inline-flex; align-items: center; font-size: 0.76rem; font-weight: 800; color: var(--ink-title); background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">Leadership &amp; Roles</span>
+                <span class="badge-bubble-org" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #2E4D3B; background: #EAF4ED; border: 1.5px solid #BDDCC4; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(74, 107, 86, 0.10);">Organization</span>
+                <span class="badge-bubble-amb" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #7D592B; background: #FAF3E8; border: 1.5px solid #E6D2B5; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(125, 89, 43, 0.10);">Ambassador</span>
+                <span class="badge-bubble-com" style="display: inline-flex; align-items: center; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #1E3A5F; background: #EFF5FA; border: 1.5px solid #C0D7EB; padding: 0.32rem 0.85rem; border-radius: 9999px; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.10);">Committee</span>
             </div>
+
+            <!-- Search Bar Filter -->
+            <form method="get" action="{% url 'main:show_experience' %}" class="award-search-bar" style="margin-bottom: 2rem;">
+                <div style="position: relative; flex: 1;">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Cari berdasarkan posisi atau organisasi..."
+                           class="award-search-input"
+                           aria-label="Cari berdasarkan posisi atau organisasi">
+                </div>
+                <button type="submit" class="award-search-button">
+                    Cari
+                </button>
+                {% if title_query %}
+                    <a href="{% url 'main:show_experience' %}" class="award-search-reset">
+                        Reset
+                    </a>
+                {% endif %}
+            </form>
 
             <div class="experience-grid">
                 {% for experience in experience_list %}
@@ -65,11 +91,22 @@
                                 {{ experience.description }}
                             </p>
                         </div>
+
+                        <!-- Card Bottom Actions & Delete Modal -->
+                        <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end;">
+                            {% include "components/experience_delete_modal.html" with experience=experience %}
+                        </div>
                     </article>
                 {% empty %}
-                    <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
-                    </p>
+                    {% if title_query %}
+                        <p class="empty-state">
+                            Tidak ada pengalaman dengan nama "{{ title_query }}".
+                        </p>
+                    {% else %}
+                        <p class="empty-state">
+                            Belum ada pengalaman yang ditambahkan.
+                        </p>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

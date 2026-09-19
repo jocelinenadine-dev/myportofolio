@@ -1,0 +1,49 @@
+<div class="award-card-actions">
+    <a href="{% url 'main:edit_experience' experience.id %}"
+       class="button-edit-pill"
+       aria-label="Edit {{ experience.title }}"
+       title="Edit Pengalaman">
+        Edit
+    </a>
+    <button type="button"
+            class="button-delete-pill"
+            popovertarget="delete-experience-{{ experience.id }}"
+            aria-label="Hapus {{ experience.title }}"
+            title="Hapus Pengalaman">
+        Hapus
+    </button>
+</div>
+
+<div id="delete-experience-{{ experience.id }}"
+     class="project-delete-modal"
+     popover="auto"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="delete-experience-title-{{ experience.id }}">
+    <button type="button"
+            class="project-delete-modal__backdrop"
+            popovertarget="delete-experience-{{ experience.id }}"
+            popovertargetaction="hide"
+            aria-label="Tutup konfirmasi hapus"></button>
+    <div class="project-delete-modal__content">
+        <button type="button"
+                class="project-delete-modal__close"
+                popovertarget="delete-experience-{{ experience.id }}"
+                popovertargetaction="hide"
+                aria-label="Tutup konfirmasi hapus">&times;</button>
+        <h2 id="delete-experience-title-{{ experience.id }}" class="modal-heading">Hapus Pengalaman?</h2>
+        <p class="modal-body-text">
+            Apakah Anda yakin ingin menghapus <strong>{{ experience.title }}</strong> dari daftar riwayat pengalaman?
+        </p>
+        <div class="project-delete-modal__actions">
+            <button type="button"
+                    class="button-modal-cancel"
+                    popovertarget="delete-experience-{{ experience.id }}"
+                    popovertargetaction="hide">Batal</button>
+            <form method="post" action="{% url 'main:delete_experience' experience.id %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="button-modal-danger">Ya, Hapus</button>
+            </form>
+        </div>
+    </div>
+</div>
