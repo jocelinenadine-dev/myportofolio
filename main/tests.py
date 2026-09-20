@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.forms import AwardForm
+from main.forms import AwardForm, ExperienceForm
 from main.models import Experience, Award
 
 
@@ -69,6 +69,100 @@ class MainTest(TestCase):
         self.assertContains(response, "Completed")
         self.assertNotContains(response, "Ongoing")
 
+    def test_create_experience_get(self):
+        response = self.client.get(reverse("main:create_experience"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "experience_form.html")
+        self.assertIsInstance(response.context["form"], ExperienceForm)
+
+    def test_create_experience_post_valid(self):
+        data = {
+            "title": "Staff of Public Relations BEM Fasilkom UI",
+            "category": "organization",
+            "description": "Menangani komunikasi eksternal dan relasi publik fakultas.",
+        }
+        response = self.client.post(reverse("main:create_experience"), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.assertTrue(Experience.objects.filter(title="Staff of Public Relations BEM Fasilkom UI").exists())
+
+    def test_create_experience_post_invalid(self):
+        data = {
+            "title": "",
+            "category": "organization",
+        }
+        response = self.client.post(reverse("main:create_experience"), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "experience_form.html")
+        self.assertTrue(response.context["form"].errors)
+
+    def test_edit_experience_get(self):
+        response = self.client.get(reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "experience_form.html")
+        self.assertTrue(response.context["is_edit"])
+
+    def test_edit_experience_post_valid(self):
+        data = {
+            "title": "Lead Asisten Riset Sistem Informasi Enterprise",
+            "category": "organization",
+            "description": "Memimpin riset arsitektur enterprise.",
+        }
+        response = self.client.post(
+            reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}),
+            data=data,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.experience.refresh_from_db()
+        self.assertEqual(self.experience.title, "Lead Asisten Riset Sistem Informasi Enterprise")
+
+    def test_delete_experience_post(self):
+        exp_to_delete = Experience.objects.create(
+            title="Sample Exp to Delete",
+            category="volunteer",
+            description="Sample volunteer",
+        )
+        response = self.client.post(reverse("main:delete_experience", kwargs={"experience_id": exp_to_delete.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.assertFalse(Experience.objects.filter(id=exp_to_delete.id).exists())
+
+    def test_get_experiences_json(self):
+        response = self.client.get(reverse("main:get_experiences_json"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["content-type"], "application/json")
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertIsInstance(data, list)
+        self.assertGreaterEqual(len(data), 1)
+        self.assertEqual(data[0]["fields"]["title"], self.experience.title)
+
+    def test_get_experiences_json_with_filter(self):
+        response = self.client.get(reverse("main:get_experiences_json") + "?title=Asisten")
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["fields"]["title"], self.experience.title)
+
+        response_empty = self.client.get(reverse("main:get_experiences_json") + "?title=NonExistentQueryXYZ")
+        data_empty = json.loads(response_empty.content.decode("utf-8"))
+        self.assertEqual(len(data_empty), 0)
+
+    def test_get_experiences_xml(self):
+        response = self.client.get(reverse("main:get_experiences_xml"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["content-type"], "application/xml")
+        self.assertContains(response, self.experience.title)
+
+    def test_show_experience_search_query(self):
+        response = self.client.get(reverse("main:show_experience") + "?title=Asisten")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.experience.title)
+
+        response_not_found = self.client.get(reverse("main:show_experience") + "?title=NonExistentQueryXYZ")
+        self.assertEqual(response_not_found.status_code, 200)
+        self.assertContains(response_not_found, "Tidak ada pengalaman dengan nama")
+
     def test_award_model(self):
         self.assertEqual(str(self.award), "Puteri Duta GenRe Kota Jakarta Pusat (1st Winner)")
         self.assertEqual(self.award.category, "advocacy")
@@ -121,13 +215,37 @@ class MainTest(TestCase):
 
     def test_create_award_post_invalid(self):
         data = {
-            "title": "",  # missing required title
+            "title": "",
             "rank": "Winner",
         }
         response = self.client.post(reverse("main:create_award"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "award_form.html")
         self.assertTrue(response.context["form"].errors)
+
+    def test_edit_award_get(self):
+        response = self.client.get(reverse("main:edit_award", kwargs={"award_id": self.award.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "award_form.html")
+        self.assertTrue(response.context["is_edit"])
+
+    def test_edit_award_post_valid(self):
+        data = {
+            "title": "Juara 1 Duta GenRe Jakarta Pusat",
+            "rank": "Winner",
+            "issuer": "BKKBN DKI Jakarta",
+            "category": "advocacy",
+            "year": "2024",
+            "description": "Advokasi remaja dan kepemudaan.",
+        }
+        response = self.client.post(
+            reverse("main:edit_award", kwargs={"award_id": self.award.id}),
+            data=data,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_awards"))
+        self.award.refresh_from_db()
+        self.assertEqual(self.award.title, "Juara 1 Duta GenRe Jakarta Pusat")
 
     def test_delete_award_post(self):
         award_to_delete = Award.objects.create(
@@ -159,7 +277,6 @@ class MainTest(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["fields"]["title"], self.award.title)
 
-        # Non-matching search
         response_empty = self.client.get(reverse("main:get_awards_json") + "?title=NonExistentQueryXYZ")
         data_empty = json.loads(response_empty.content.decode("utf-8"))
         self.assertEqual(len(data_empty), 0)
