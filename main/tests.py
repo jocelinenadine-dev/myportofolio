@@ -1,4 +1,5 @@
 import json
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -9,6 +10,17 @@ from main.models import Experience, Award
 
 class MainTest(TestCase):
     def setUp(self):
+        self.password = "P@ssword12345!"
+        self.admin_user = User.objects.create_superuser(
+            username="admin_joceline",
+            password=self.password,
+            email="admin@example.com",
+        )
+        self.regular_user = User.objects.create_user(
+            username="regular_visitor",
+            password=self.password,
+            email="visitor@example.com",
+        )
         self.experience = Experience.objects.create(
             title="Asisten Riset Sistem Informasi",
             description="Membantu riset pemodelan arsitektur sistem informasi enterprise.",
@@ -69,13 +81,15 @@ class MainTest(TestCase):
         self.assertContains(response, "Completed")
         self.assertNotContains(response, "Ongoing")
 
-    def test_create_experience_get(self):
+    def test_create_experience_get_superuser(self):
+        self.client.force_login(self.admin_user)
         response = self.client.get(reverse("main:create_experience"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience_form.html")
         self.assertIsInstance(response.context["form"], ExperienceForm)
 
-    def test_create_experience_post_valid(self):
+    def test_create_experience_post_valid_superuser(self):
+        self.client.force_login(self.admin_user)
         data = {
             "title": "Staff of Public Relations BEM Fasilkom UI",
             "category": "organization",
@@ -86,7 +100,8 @@ class MainTest(TestCase):
         self.assertRedirects(response, reverse("main:show_experience"))
         self.assertTrue(Experience.objects.filter(title="Staff of Public Relations BEM Fasilkom UI").exists())
 
-    def test_create_experience_post_invalid(self):
+    def test_create_experience_post_invalid_superuser(self):
+        self.client.force_login(self.admin_user)
         data = {
             "title": "",
             "category": "organization",
@@ -96,13 +111,15 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "experience_form.html")
         self.assertTrue(response.context["form"].errors)
 
-    def test_edit_experience_get(self):
+    def test_edit_experience_get_superuser(self):
+        self.client.force_login(self.admin_user)
         response = self.client.get(reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience_form.html")
         self.assertTrue(response.context["is_edit"])
 
-    def test_edit_experience_post_valid(self):
+    def test_edit_experience_post_valid_superuser(self):
+        self.client.force_login(self.admin_user)
         data = {
             "title": "Lead Asisten Riset Sistem Informasi Enterprise",
             "category": "organization",
@@ -117,7 +134,8 @@ class MainTest(TestCase):
         self.experience.refresh_from_db()
         self.assertEqual(self.experience.title, "Lead Asisten Riset Sistem Informasi Enterprise")
 
-    def test_delete_experience_post(self):
+    def test_delete_experience_post_superuser(self):
+        self.client.force_login(self.admin_user)
         exp_to_delete = Experience.objects.create(
             title="Sample Exp to Delete",
             category="volunteer",
@@ -193,13 +211,15 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Belum ada penghargaan yang ditambahkan.")
 
-    def test_create_award_get(self):
+    def test_create_award_get_superuser(self):
+        self.client.force_login(self.admin_user)
         response = self.client.get(reverse("main:create_award"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "award_form.html")
         self.assertIsInstance(response.context["form"], AwardForm)
 
-    def test_create_award_post_valid(self):
+    def test_create_award_post_valid_superuser(self):
+        self.client.force_login(self.admin_user)
         data = {
             "title": "Koko Cici Jakarta 2026",
             "rank": "Finalist",
@@ -213,7 +233,8 @@ class MainTest(TestCase):
         self.assertRedirects(response, reverse("main:show_awards"))
         self.assertTrue(Award.objects.filter(title="Koko Cici Jakarta 2026").exists())
 
-    def test_create_award_post_invalid(self):
+    def test_create_award_post_invalid_superuser(self):
+        self.client.force_login(self.admin_user)
         data = {
             "title": "",
             "rank": "Winner",
@@ -223,13 +244,15 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "award_form.html")
         self.assertTrue(response.context["form"].errors)
 
-    def test_edit_award_get(self):
+    def test_edit_award_get_superuser(self):
+        self.client.force_login(self.admin_user)
         response = self.client.get(reverse("main:edit_award", kwargs={"award_id": self.award.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "award_form.html")
         self.assertTrue(response.context["is_edit"])
 
-    def test_edit_award_post_valid(self):
+    def test_edit_award_post_valid_superuser(self):
+        self.client.force_login(self.admin_user)
         data = {
             "title": "Juara 1 Duta GenRe Jakarta Pusat",
             "rank": "Winner",
@@ -247,7 +270,8 @@ class MainTest(TestCase):
         self.award.refresh_from_db()
         self.assertEqual(self.award.title, "Juara 1 Duta GenRe Jakarta Pusat")
 
-    def test_delete_award_post(self):
+    def test_delete_award_post_superuser(self):
+        self.client.force_login(self.admin_user)
         award_to_delete = Award.objects.create(
             title="Sample Award to Delete",
             rank="3rd Winner",
@@ -304,3 +328,178 @@ class MainTest(TestCase):
         response_empty = self.client.get(reverse("main:get_awards_xml") + "?title=NonExistentQueryXYZ")
         self.assertEqual(response_empty.status_code, 200)
         self.assertNotContains(response_empty, self.award.title)
+
+    # ----------------------------------------------------------------------
+    # Tutorial 04: Authentication, Session, Cookie, Authorization Tests
+    # ----------------------------------------------------------------------
+
+    def test_register_get(self):
+        response = self.client.get(reverse("main:register"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "register.html")
+        self.assertContains(response, "Buat Akun")
+        self.assertContains(response, "Daftar")
+
+    def test_register_post_valid(self):
+        data = {
+            "username": "newuser_test",
+            "password1": "SecurePass12345!",
+            "password2": "SecurePass12345!",
+        }
+        response = self.client.post(reverse("main:register"), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:login"))
+        self.assertTrue(User.objects.filter(username="newuser_test").exists())
+
+    def test_register_post_invalid_mismatched_password(self):
+        data = {
+            "username": "mismatch_user",
+            "password1": "SecurePass12345!",
+            "password2": "DifferentPass999!",
+        }
+        response = self.client.post(reverse("main:register"), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "register.html")
+        self.assertFalse(User.objects.filter(username="mismatch_user").exists())
+
+    def test_login_get(self):
+        response = self.client.get(reverse("main:login"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "login.html")
+        self.assertContains(response, "Login")
+
+    def test_login_post_valid_sets_cookie(self):
+        data = {
+            "username": "regular_visitor",
+            "password": self.password,
+        }
+        response = self.client.post(reverse("main:login"), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_main"))
+        self.assertIn("last_login", response.cookies)
+        self.assertTrue(response.cookies["last_login"].value)
+
+    def test_login_post_invalid(self):
+        data = {
+            "username": "regular_visitor",
+            "password": "wrong_password_xyz",
+        }
+        response = self.client.post(reverse("main:login"), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "login.html")
+
+    def test_logout_user_deletes_cookie(self):
+        self.client.login(username="regular_visitor", password=self.password)
+        response = self.client.get(reverse("main:logout"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_main"))
+        self.assertIn("last_login", response.cookies)
+        self.assertEqual(response.cookies["last_login"].value, "")
+
+    def test_show_main_last_login_cookie_display(self):
+        self.client.cookies["last_login"] = "2026-09-21 14:00:00"
+        response = self.client.get(reverse("main:show_main"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["last_login"], "2026-09-21 14:00:00")
+        self.assertContains(response, "2026-09-21 14:00:00")
+
+    def test_show_main_without_last_login_cookie(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Belum ada sesi login", response.context["last_login"])
+
+    def test_unauthenticated_user_redirected_to_login_on_mutating_views(self):
+        # Anonymous users accessing mutating actions should be redirected to login
+        create_exp_resp = self.client.get(reverse("main:create_experience"))
+        self.assertEqual(create_exp_resp.status_code, 302)
+        self.assertIn(reverse("main:login"), create_exp_resp.url)
+
+        create_award_resp = self.client.get(reverse("main:create_award"))
+        self.assertEqual(create_award_resp.status_code, 302)
+        self.assertIn(reverse("main:login"), create_award_resp.url)
+
+        edit_exp_resp = self.client.get(reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(edit_exp_resp.status_code, 302)
+        self.assertIn(reverse("main:login"), edit_exp_resp.url)
+
+        delete_exp_resp = self.client.post(reverse("main:delete_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(delete_exp_resp.status_code, 302)
+        self.assertIn(reverse("main:login"), delete_exp_resp.url)
+
+        star_resp = self.client.post(reverse("main:toggle_star", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(star_resp.status_code, 302)
+        self.assertIn(reverse("main:login"), star_resp.url)
+
+    def test_regular_user_permission_denied_on_crud_views(self):
+        self.client.force_login(self.regular_user)
+
+        resp1 = self.client.get(reverse("main:create_experience"))
+        self.assertEqual(resp1.status_code, 403)
+
+        resp2 = self.client.post(reverse("main:create_experience"), data={"title": "Test", "category": "organization"})
+        self.assertEqual(resp2.status_code, 403)
+
+        resp3 = self.client.get(reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(resp3.status_code, 403)
+
+        resp4 = self.client.post(reverse("main:delete_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(resp4.status_code, 403)
+
+        resp5 = self.client.get(reverse("main:create_award"))
+        self.assertEqual(resp5.status_code, 403)
+
+        resp6 = self.client.get(reverse("main:edit_award", kwargs={"award_id": self.award.id}))
+        self.assertEqual(resp6.status_code, 403)
+
+        resp7 = self.client.post(reverse("main:delete_award", kwargs={"award_id": self.award.id}))
+        self.assertEqual(resp7.status_code, 403)
+
+    def test_toggle_star_experience_by_authenticated_user(self):
+        self.client.force_login(self.regular_user)
+
+        # First POST: Add star
+        response = self.client.post(reverse("main:toggle_star", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.experience.refresh_from_db()
+        self.assertIn(self.regular_user, self.experience.starred_by.all())
+        self.assertEqual(self.experience.starred_by.count(), 1)
+
+        # Second POST: Remove star (Unstar)
+        response = self.client.post(reverse("main:toggle_star", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.experience.refresh_from_db()
+        self.assertNotIn(self.regular_user, self.experience.starred_by.all())
+        self.assertEqual(self.experience.starred_by.count(), 0)
+
+    def test_navbar_auth_state_anonymous_vs_authenticated(self):
+        # Anonymous
+        anon_resp = self.client.get(reverse("main:show_main"))
+        self.assertContains(anon_resp, f'href="{reverse("main:login")}"')
+        self.assertContains(anon_resp, f'href="{reverse("main:register")}"')
+        self.assertNotContains(anon_resp, f'href="{reverse("main:logout")}"')
+
+        # Authenticated
+        self.client.force_login(self.regular_user)
+        auth_resp = self.client.get(reverse("main:show_main"))
+        self.assertContains(auth_resp, self.regular_user.username)
+        self.assertContains(auth_resp, f'href="{reverse("main:logout")}"')
+        self.assertNotContains(auth_resp, f'href="{reverse("main:login")}"')
+
+    def test_superuser_ui_controls_visibility(self):
+        # Anonymous / Regular user should NOT see "Tambah Pengalaman"
+        regular_resp = self.client.get(reverse("main:show_experience"))
+        self.assertNotContains(regular_resp, "Tambah Pengalaman")
+
+        # Superuser SHOULD see "Tambah Pengalaman"
+        self.client.force_login(self.admin_user)
+        admin_resp = self.client.get(reverse("main:show_experience"))
+        self.assertContains(admin_resp, "Tambah Pengalaman")
+
+    def test_get_experiences_json_with_starred_by(self):
+        self.experience.starred_by.add(self.regular_user)
+        response = self.client.get(reverse("main:get_experiences_json"))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(data[0]["fields"]["starred_by"], [[self.regular_user.username]])

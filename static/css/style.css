@@ -1631,3 +1631,81 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(220, 38, 38, 0.35);
 }
+
+/* ==========================================================================
+   12. AUTH & STAR COMPONENT STYLES (TUTORIAL 04)
+   ========================================================================== */
+.nav-user {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--accent-sage-dark);
+    background: var(--accent-sage-light);
+    border: 1.5px solid var(--accent-sage-tint);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 1px 4px rgba(74, 107, 86, 0.08);
+    display: inline-flex;
+    align-items: center;
+}
+
+.star-form {
+    display: inline;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    background: var(--ink-title);
+    border: none;
+    padding: 0.42rem 0.95rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(28, 50, 37, 0.15);
+}
+
+.button-star:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(28, 50, 37, 0.25);
+}
+
+.button-star.is-starred {
+    background: linear-gradient(135deg, var(--accent-sage-dark), var(--accent-sage));
+    box-shadow: 0 2px 8px rgba(74, 107, 86, 0.25);
+}
+
+.button-star.is-starred:hover {
+    box-shadow: 0 4px 14px rgba(74, 107, 86, 0.35);
+}
+
+.star-count {
+    padding: 0.08rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.form-help {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    margin-top: 0.35rem;
+    line-height: 1.5;
+}
+
+.form-help ul {
+    margin: 0.25rem 0 0 1.25rem;
+    padding: 0;
+}
+
+.form-message {
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+

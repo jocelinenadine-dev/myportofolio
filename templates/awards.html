@@ -16,10 +16,12 @@
                         Competitive distinctions in youth ambassadorship, public speaking, cultural diplomacy, business case innovation, and public health governance.
                     </p>
                 </div>
+                {% if user.is_superuser %}
                 <a href="{% url 'main:create_award' %}" class="button-add-pill">
                     <span style="font-size: 1.1rem; line-height: 1;">+</span>
                     <span>Tambah Penghargaan</span>
                 </a>
+                {% endif %}
             </div>
 
             <!-- Cute Overview Bubble Rack -->
@@ -83,9 +85,11 @@
                         </div>
 
                         <!-- Card Bottom Actions & Delete Modal -->
+                        {% if user.is_superuser %}
                         <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end;">
                             {% include "components/award_delete_modal.html" with award=award %}
                         </div>
+                        {% endif %}
                     </article>
                 {% empty %}
                     {% if title_query %}
