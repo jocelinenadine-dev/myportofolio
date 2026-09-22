@@ -12,6 +12,10 @@ from main.forms import AwardForm, ExperienceForm
 from main.models import Experience, Award
 
 
+def is_editor_user(user):
+    return user.is_authenticated and user.groups.filter(name="Editor").exists()
+
+
 def show_main(request):
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
@@ -96,11 +100,13 @@ def show_experience(request):
     )
     experiences = [exp.object for exp in experiences_deserialized]
     title_query = request.GET.get("title", "").strip()
+    is_editor = is_editor_user(request.user)
 
     context = {
         "name": "Joceline Nadine Immanuella",
         "experience_list": experiences,
         "title_query": title_query,
+        "is_editor": is_editor,
     }
     return render(request, "experience.html", context)
 
@@ -127,7 +133,7 @@ def create_experience(request):
 
 @login_required(login_url="/login/")
 def edit_experience(request, experience_id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or is_editor_user(request.user)):
         raise PermissionDenied
 
     experience = get_object_or_404(Experience, pk=experience_id)
@@ -205,11 +211,13 @@ def show_awards(request):
     )
     awards = [award.object for award in awards_deserialized]
     title_query = request.GET.get("title", "").strip()
+    is_editor = is_editor_user(request.user)
 
     context = {
         "name": "Joceline Nadine Immanuella",
         "award_list": awards,
         "title_query": title_query,
+        "is_editor": is_editor,
     }
     return render(request, "awards.html", context)
 
@@ -236,7 +244,7 @@ def create_award(request):
 
 @login_required(login_url="/login/")
 def edit_award(request, award_id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or is_editor_user(request.user)):
         raise PermissionDenied
 
     award = get_object_or_404(Award, pk=award_id)
