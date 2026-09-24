@@ -1,10 +1,13 @@
 <div class="award-card-actions">
+    {% if user.is_superuser or is_editor %}
     <a href="{% url 'main:edit_experience' experience.id %}"
        class="button-edit-pill"
        aria-label="Edit {{ experience.title }}"
        title="Edit Pengalaman">
         Edit
     </a>
+    {% endif %}
+    {% if user.is_superuser %}
     <button type="button"
             class="button-delete-pill"
             popovertarget="delete-experience-{{ experience.id }}"
@@ -12,8 +15,10 @@
             title="Hapus Pengalaman">
         Hapus
     </button>
+    {% endif %}
 </div>
 
+{% if user.is_superuser %}
 <div id="delete-experience-{{ experience.id }}"
      class="project-delete-modal"
      popover="auto"
@@ -47,3 +52,4 @@
         </div>
     </div>
 </div>
+{% endif %}
