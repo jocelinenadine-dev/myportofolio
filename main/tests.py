@@ -1,5 +1,5 @@
 import json
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -16,6 +16,14 @@ class MainTest(TestCase):
             password=self.password,
             email="admin@example.com",
         )
+        self.editor_group, _ = Group.objects.get_or_create(name="Editor")
+        self.editor_user = User.objects.create_user(
+            username="editor_nadine",
+            password=self.password,
+            email="editor@example.com",
+        )
+        self.editor_user.groups.add(self.editor_group)
+
         self.regular_user = User.objects.create_user(
             username="regular_visitor",
             password=self.password,
@@ -409,7 +417,6 @@ class MainTest(TestCase):
         self.assertIn("Belum ada sesi login", response.context["last_login"])
 
     def test_unauthenticated_user_redirected_to_login_on_mutating_views(self):
-        # Anonymous users accessing mutating actions should be redirected to login
         create_exp_resp = self.client.get(reverse("main:create_experience"))
         self.assertEqual(create_exp_resp.status_code, 302)
         self.assertIn(reverse("main:login"), create_exp_resp.url)
@@ -474,13 +481,11 @@ class MainTest(TestCase):
         self.assertEqual(self.experience.starred_by.count(), 0)
 
     def test_navbar_auth_state_anonymous_vs_authenticated(self):
-        # Anonymous
         anon_resp = self.client.get(reverse("main:show_main"))
         self.assertContains(anon_resp, f'href="{reverse("main:login")}"')
         self.assertContains(anon_resp, f'href="{reverse("main:register")}"')
         self.assertNotContains(anon_resp, f'href="{reverse("main:logout")}"')
 
-        # Authenticated
         self.client.force_login(self.regular_user)
         auth_resp = self.client.get(reverse("main:show_main"))
         self.assertContains(auth_resp, self.regular_user.username)
@@ -488,11 +493,9 @@ class MainTest(TestCase):
         self.assertNotContains(auth_resp, f'href="{reverse("main:login")}"')
 
     def test_superuser_ui_controls_visibility(self):
-        # Anonymous / Regular user should NOT see "Tambah Pengalaman"
         regular_resp = self.client.get(reverse("main:show_experience"))
         self.assertNotContains(regular_resp, "Tambah Pengalaman")
 
-        # Superuser SHOULD see "Tambah Pengalaman"
         self.client.force_login(self.admin_user)
         admin_resp = self.client.get(reverse("main:show_experience"))
         self.assertContains(admin_resp, "Tambah Pengalaman")
@@ -503,3 +506,96 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode("utf-8"))
         self.assertEqual(data[0]["fields"]["starred_by"], [[self.regular_user.username]])
+
+    # ----------------------------------------------------------------------
+    # Tugas 4: 4-Role Authorization Tests (Editor & Superuser Matrix)
+    # ----------------------------------------------------------------------
+
+    def test_editor_can_access_edit_experience(self):
+        self.client.force_login(self.editor_user)
+        get_resp = self.client.get(reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(get_resp.status_code, 200)
+        self.assertTemplateUsed(get_resp, "experience_form.html")
+
+        post_data = {
+            "title": "Lead Asisten Riset Sistem Informasi (Edited by Editor)",
+            "category": "organization",
+            "description": "Perubahan deskripsi oleh editor kelompok.",
+        }
+        post_resp = self.client.post(
+            reverse("main:edit_experience", kwargs={"experience_id": self.experience.id}),
+            data=post_data,
+        )
+        self.assertEqual(post_resp.status_code, 302)
+        self.assertRedirects(post_resp, reverse("main:show_experience"))
+        self.experience.refresh_from_db()
+        self.assertEqual(self.experience.title, "Lead Asisten Riset Sistem Informasi (Edited by Editor)")
+
+    def test_editor_can_access_edit_award(self):
+        self.client.force_login(self.editor_user)
+        get_resp = self.client.get(reverse("main:edit_award", kwargs={"award_id": self.award.id}))
+        self.assertEqual(get_resp.status_code, 200)
+        self.assertTemplateUsed(get_resp, "award_form.html")
+
+        post_data = {
+            "title": "Juara 1 Duta GenRe Jakarta Pusat (Edited by Editor)",
+            "rank": "1st Winner",
+            "issuer": "BKKBN DKI Jakarta",
+            "category": "advocacy",
+            "year": "2024",
+            "description": "Advokasi remaja dan kepemudaan DKI Jakarta.",
+        }
+        post_resp = self.client.post(
+            reverse("main:edit_award", kwargs={"award_id": self.award.id}),
+            data=post_data,
+        )
+        self.assertEqual(post_resp.status_code, 302)
+        self.assertRedirects(post_resp, reverse("main:show_awards"))
+        self.award.refresh_from_db()
+        self.assertEqual(self.award.title, "Juara 1 Duta GenRe Jakarta Pusat (Edited by Editor)")
+
+    def test_editor_forbidden_on_create_and_delete_actions(self):
+        self.client.force_login(self.editor_user)
+
+        # Create experience -> 403 Forbidden
+        create_exp_get = self.client.get(reverse("main:create_experience"))
+        self.assertEqual(create_exp_get.status_code, 403)
+        create_exp_post = self.client.post(
+            reverse("main:create_experience"),
+            data={"title": "Illegal Exp", "category": "organization", "description": "Illegal"},
+        )
+        self.assertEqual(create_exp_post.status_code, 403)
+
+        # Delete experience -> 403 Forbidden
+        del_exp_post = self.client.post(reverse("main:delete_experience", kwargs={"experience_id": self.experience.id}))
+        self.assertEqual(del_exp_post.status_code, 403)
+
+        # Create award -> 403 Forbidden
+        create_award_get = self.client.get(reverse("main:create_award"))
+        self.assertEqual(create_award_get.status_code, 403)
+        create_award_post = self.client.post(
+            reverse("main:create_award"),
+            data={"title": "Illegal Award", "rank": "1st", "issuer": "Org", "category": "advocacy", "year": "2024"},
+        )
+        self.assertEqual(create_award_post.status_code, 403)
+
+        # Delete award -> 403 Forbidden
+        del_award_post = self.client.post(reverse("main:delete_award", kwargs={"award_id": self.award.id}))
+        self.assertEqual(del_award_post.status_code, 403)
+
+    def test_editor_ui_controls_visibility(self):
+        self.client.force_login(self.editor_user)
+
+        # Experience page for Editor: sees Edit button, but NOT Tambah Pengalaman or Hapus button
+        exp_resp = self.client.get(reverse("main:show_experience"))
+        self.assertEqual(exp_resp.status_code, 200)
+        self.assertNotContains(exp_resp, "Tambah Pengalaman")
+        self.assertContains(exp_resp, f'href="{reverse("main:edit_experience", kwargs={"experience_id": self.experience.id})}"')
+        self.assertNotContains(exp_resp, f'popovertarget="delete-experience-{self.experience.id}"')
+
+        # Awards page for Editor: sees Edit button, but NOT Tambah Penghargaan or Hapus button
+        award_resp = self.client.get(reverse("main:show_awards"))
+        self.assertEqual(award_resp.status_code, 200)
+        self.assertNotContains(award_resp, "Tambah Penghargaan")
+        self.assertContains(award_resp, f'href="{reverse("main:edit_award", kwargs={"award_id": self.award.id})}"')
+        self.assertNotContains(award_resp, f'popovertarget="delete-award-{self.award.id}"')
