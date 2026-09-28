@@ -46,6 +46,12 @@
    python manage.py migrate
    ```
 
+5. **(Opsional) Membuat Akun Superuser & Setup Peran Editor:**
+   ```bash
+   python manage.py createsuperuser
+   ```
+   *Masuk ke `http://localhost:8000/admin/`, buat Group baru bernama `Editor`, lalu tambahkan pengguna tertentu ke dalam grup tersebut untuk menguji hak akses peran Editor.*
+
 ### 3. Menjalankan Server Pengembangan (*Development Server*)
 
 Jalankan perintah berikut pada terminal:
@@ -54,6 +60,8 @@ python manage.py runserver
 ```
 Buka browser dan akses URL berikut:
 - **Halaman Utama (Profile):** [http://localhost:8000/](http://localhost:8000/)
+- **Halaman Registrasi:** [http://localhost:8000/register/](http://localhost:8000/register/)
+- **Halaman Login:** [http://localhost:8000/login/](http://localhost:8000/login/)
 - **Halaman Experience:** [http://localhost:8000/experience/](http://localhost:8000/experience/)
 - **Halaman Honors & Awards:** [http://localhost:8000/awards/](http://localhost:8000/awards/)
 - **Endpoint API JSON Experience:** [http://localhost:8000/api/experience/](http://localhost:8000/api/experience/)
@@ -61,13 +69,13 @@ Buka browser dan akses URL berikut:
 
 ### 4. Menjalankan Automated Unit Tests
 
-Proyek ini dilengkapi dengan 31 automated unit tests untuk memverifikasi keandalan model, view, routing URL, validasi form, CRUD, search filtering, dan serialisasi data JSON/XML.
+Proyek ini dilengkapi dengan **50 automated unit tests** untuk memverifikasi keandalan model, view, routing URL, validasi form, CRUD, otorisasi 4 peran pengguna (Pengunjung, Pengguna Biasa, Editor, Superuser), manajemen cookie `last_login`, fitur Star, dan serialisasi data API.
 
 Jalankan pengujian otomatis dengan perintah:
 ```bash
 python manage.py test
 ```
-*Output yang diharapkan: `Ran 31 tests in ...s — OK (Found 31 test(s), 0 errors, 0 failures)`.*
+*Output yang diharapkan: `Ran 50 tests in ...s — OK (Found 50 test(s), 0 errors, 0 failures)`.*
 
 ---
 
@@ -78,6 +86,7 @@ python manage.py test
 | **Tugas 1 (Minggu 1)** | • Pembuatan Web Statis Portofolio Pribadi berbasis Semantic HTML5 (`<header>`, `<main>`, `<section>`, `<article>`, `<footer>`).<br>• Perancangan layout responsif *Sage Green Bento Grid* menggunakan CSS3 Grid & Flexbox.<br>• Optimasi mobile media queries (`max-width: 960px` dan `max-width: 600px`). | Selesai (100%) |
 | **Tugas 2 (Minggu 2)** | • Inisialisasi arsitektur Model-View-Template (MVT) pada Django.<br>• Pembuatan model database `Experience` dan `Award` dengan skema `UUIDField`, `CharField`, `choices`, dan `DateTimeField`.<br>• Konfigurasi *Django Admin* (`admin.py`) untuk pengelolaan data dinamis.<br>• Pendaftaran rute URL modular dan pembuatan data migration untuk inisialisasi deployment PWS. | Selesai (100%) |
 | **Tugas 3 (Minggu 3)** | • Penerapan **Template Inheritance** dengan kerangka utama [`templates/base.html`](templates/base.html) dan pembersihan duplikasi template.<br>• Pembuatan Django `ModelForm` ([`main/forms.py`](main/forms.py)) untuk `ExperienceForm` dan `AwardForm` dengan validasi server-side otomatis.<br>• Implementasi **Full CRUD (Create, Read, Update, Delete)** pada bagian Experience dan Awards.<br>• Pembuatan antarmuka modal konfirmasi hapus menggunakan HTML5 Popover API dengan backdrop blur.<br>• Fitur pencarian instan dinamis (*search bar*) dengan parameter kueri `?title=...`.<br>• Implementasi **Data Delivery** (API JSON dan XML) serta deserialisasi data internal.<br>• Penyusunan **31 automated unit tests** (100% lolos). | Selesai (100%) |
+| **Tugas 4 (Minggu 4)** | • Implementasi sistem autentikasi bawaan Django: **Register** (`UserCreationForm`), **Login** (`AuthenticationForm`), dan **Logout**.<br>• Pembaruan antarmuka Navbar dengan status autentikasi dinamis (`{% if user.is_authenticated %}`).<br>• Manajemen **Session & Cookie**: penerbitan cookie `last_login` saat login dan penghapusan saat logout, serta penampilannya pada profil utama.<br>• Penerapan **Otorisasi 4 Peran Pengguna**: Pengunjung (Guest), Pengguna Biasa, Editor (Django Group `Editor`), dan Superuser (Admin).<br>• Proteksi server-side: `@login_required` dan pembatasan `PermissionDenied` (HTTP 403 Forbidden).<br>• Fitur interaktif **Star (★)** berbasis relasi `ManyToManyField(User)` pada model `Experience`.<br>• Penyusunan **50 automated unit tests** komprehensif (100% lolos). | Selesai (100%) |
 
 ---
 
@@ -260,7 +269,7 @@ Alasan dan bagaimana elemen semantik ini sangat membantu saya dalam membangun we
      2. **Pengambilan Data dari Database via ORM (*QuerySet Retrieval*):**  
         Fungsi controller di `views.py` (seperti `get_experiences_json`) mengeksekusi kueri ORM Django: `Experience.objects.all().order_by("-started_at")` (atau menerapkan filter kueri jika ada parameter pencarian). Langkah ini menghasilkan sekumpulan objek Python bernama *QuerySet*.
      3. **Proses Serialisasi (*Data Serialization*):**  
-        View memanggil fungsi serialisasi Django: `serializers.serialize("json", experiences)`. Modul ini mengiterasi setiap objek model, membaca seluruh field dan nilainya, lalu menerjemahkannya ke dalam bentuk string berformat JSON terstandarisasi.
+        View memanggil fungsi serialisasi Django: `serializers.serialize("json", experiences, use_natural_foreign_keys=True)`. Modul ini mengiterasi setiap objek model, membaca seluruh field dan nilainya, lalu menerjemahkannya ke dalam bentuk string berformat JSON terstandarisasi.
      4. **Pembungkusan Respons HTTP (*HTTP Response Delivery*):**  
         String JSON tersebut dibungkus ke dalam objek `HttpResponse(experiences_json, content_type="application/json")` dengan kode status `200 OK`. Header `content-type: application/json` memberitahukan browser/klien bahwa data yang dikirimkan adalah payload JSON mentah.
 
@@ -271,101 +280,51 @@ Alasan dan bagaimana elemen semantik ini sangat membantu saya dalam membangun we
 
 ---
 
-### Langkah-Langkah Implementasi Checklist Tugas 3
+### Tugas 4: Autentikasi, Session, Cookie, dan Hak Akses Pengguna
 
-Berikut adalah rincian tahapan implementasi yang telah saya lakukan untuk memenuhi seluruh checklist tugas:
+*(Catatan: Pertanyaan reflektif untuk Tugas 4 ditiadakan sesuai instruksi tim pengajar PBP).*
 
-1. **Refactoring Template Utama Menggunakan Template Inheritance (`base.html`):**
-   - Membuat berkas [`templates/base.html`](templates/base.html) sebagai kerangka induk (*root template*) yang memuat deklarasi HTML5, meta viewport, font Google (Plus Jakarta Sans & Space Grotesk), pemanggilan stylesheet `/static/css/style.css`, navbar interaktif, penampung notifikasi *flash messages*, blok konten dinamis `{% block content %}`, dan footer.
-   - Merefaktor seluruh template (`index.html`, `experience.html`, `awards.html`, `experience_form.html`, `award_form.html`) agar menggunakan sintaksis `{% extends "base.html" %}` sehingga tidak ada duplikasi kode boilerplate HTML.
+#### 1. Pembagian Hak Akses 4 Peran
+- **Pengunjung (Guest / Unauthenticated):** Hanya dapat melihat halaman portofolio. Jika mencoba aksi tambah, edit, hapus, atau star, pengguna akan otomatis dialihkan ke halaman login (`/login/?next=...`).
+- **Pengguna Biasa (Logged-in User):** Dapat melihat portofolio dan memberikan atau membatalkan Star pada kartu pengalaman. Aksi mutasi seperti tambah, edit, atau hapus diblokir dengan respons `HTTP 403 Forbidden`.
+- **Editor (Anggota Grup `Editor`):** Dapat melihat portofolio, memberi Star, dan mengedit data Experience serta Award. Aksi tambah dan hapus tetap diblokir dengan `HTTP 403 Forbidden`.
+- **Superuser (Admin / Pemilik Portofolio):** Memiliki hak akses penuh untuk seluruh operasi CRUD (tambah, lihat, edit, hapus) serta fitur Star.
 
-2. **Membuat `ModelForm` Baru di `main/forms.py`:**
-   - Mendefinisikan kelas `ExperienceForm(ModelForm)` pada [`main/forms.py`](main/forms.py) untuk merepresentasikan model `Experience`.
-   - Memilih 4 field yang bervariasi: `title` (`TextInput`), `category` (`Select` dropdown dengan opsi kategori organisasi/duta/kepanitiaan), `description` (`Textarea`), dan `thumbnail` (`TextInput` URL). Field `id` dan `started_at` diabaikan karena ditangani otomatis oleh database.
-   - Memasangkan widget custom dengan class styling (`form-input`, `form-select`, `form-textarea`) serta label bahasa Indonesia yang jelas.
+---
 
-3. **Membuat Fungsi Controller (Views) CRUD & Serialisasi Data:**
-   - **Create:** Mengimplementasikan fungsi `create_experience` di [`main/views.py`](main/views.py) yang menerima *HTTP POST request*, memvalidasi data form melalui `form.is_valid()`, menyimpan data via `form.save()`, menyisipkan notifikasi sukses via `messages.success()`, dan melakukan `redirect` ke halaman daftar pengalaman.
-   - **Update (Edit):** Mengimplementasikan fungsi `edit_experience` dengan mengambil objek data berdasarkan ID menggunakan `get_object_or_404(Experience, pk=experience_id)` dan menghubungkannya ke form melalui `ExperienceForm(request.POST or None, instance=experience)`.
-   - **Delete:** Mengimplementasikan fungsi `delete_experience` yang menghapus entitas data secara aman hanya jika request berjenis *HTTP POST* dengan proteksi `{% csrf_token %}`.
-   - **JSON & XML Data Delivery:** Mengimplementasikan fungsi `get_experiences_json` dan `get_experiences_xml` yang mengambil *QuerySet* `Experience.objects.all().order_by("-started_at")`, menerapkan filter pencarian jika parameter kueri `?title=...` dikirimkan, lalu mengembalikan data yang diserialisasi melalui `HttpResponse` dengan *content-type* yang sesuai.
-   - **Deserialisasi & Display:** Mengimplementasikan fungsi `show_experience` yang memanggil `get_experiences_json`, melakukan deserialisasi data JSON menggunakan `serializers.deserialize("json", ...)`, dan menyalurkan objek data ke template `experience.html`.
+#### 2. Panduan Menguji Peran Editor di Django Admin
+1. Buat akun superuser melalui terminal jika belum ada:
+   ```bash
+   python manage.py createsuperuser
+   ```
+2. Buka antarmuka Django Admin di [http://localhost:8000/admin/](http://localhost:8000/admin/) dan login menggunakan akun superuser.
+3. Masuk ke menu **Groups** $\rightarrow$ klik **Add Group**.
+4. Beri nama grup persis: **`Editor`** $\rightarrow$ klik **Save**.
+5. Buka menu **Users** $\rightarrow$ pilih akun pengguna yang ingin dijadikan editor $\rightarrow$ centang grup **`Editor`** pada bagian *Groups* $\rightarrow$ klik **Save**.
+6. Akun tersebut kini memiliki hak akses Editor (tombol Edit akan muncul pada kartu, namun tombol Tambah dan Hapus tetap disembunyikan/diblokir).
 
-4. **Membuat Antarmuka Pengguna (UI/UX) dan Modal Konfirmasi:**
-   - Membuat halaman [`templates/experience_form.html`](templates/experience_form.html) yang *reusable* untuk mode tambah dan edit data dengan indikator judul dinamis (`is_edit`).
-   - Membuat komponen modal konfirmasi hapus [`templates/components/experience_delete_modal.html`](templates/components/experience_delete_modal.html) berbasis **HTML5 Popover API** (`popover="auto"`) dan efek CSS *backdrop blur* sehingga data tidak terhapus tanpa konfirmasi sadar dari pengguna.
-   - Menambahkan bilah pencarian dinamis (*search bar*) pada halaman `experience.html` dan `awards.html` untuk memfilter tampilan kartu secara instan.
+---
 
-5. **Penyusunan 31 Automated Unit Tests:**
-   - Menyusun 31 skenario pengujian komprehensif pada [`main/tests.py`](main/tests.py) yang mencakup validasi form, alur CRUD lengkap, penanganan form invalid, filter search query, dan serialisasi API.
-   - Menjalankan perintah `python manage.py test` dan memastikan seluruh 31 test lolos (100% OK).
+#### 3. Rincian Fitur yang Diterapkan
+- **Sistem Autentikasi:** Implementasi form register (`UserCreationForm`), login (`AuthenticationForm`), dan logout (`logout`). Navbar otomatis mendeteksi status pengguna via `{% if user.is_authenticated %}`.
+- **Session & Cookie `last_login`:** Cookie dibuat saat proses login berhasil, ditampilkan pada kartu profil di halaman utama (`show_main`), dan dihapus saat pengguna logout.
+- **Proteksi Server-Side:** Memanfaatkan `@login_required` dan `PermissionDenied` pada `views.py` agar pembatasan hak akses tidak bisa ditembus langsung melalui URL.
+- **Fitur Interaktif Star:** Menambahkan relasi `starred_by = models.ManyToManyField(User, ...)` pada model `Experience` dan view `toggle_star` dengan metode POST berproteksi token CSRF.
+- **Automated Unit Tests:** Menyusun 50 unit test di `main/tests.py` untuk menguji form, CRUD, cookie, fitur star, dan otorisasi 4 peran pengguna (50/50 test lulus OK).
 
 ---
 
 ## AI Disclosure & Catatan Penggunaan AI
 
-Dalam pengerjaan Tugas 3 ini, saya memanfaatkan generative AI (Gemini) sebagai sarana diskusi untuk memperdalam konsep arsitektur Django, mekanisme keamanan form, serta perancangan skenario automated unit testing.
+Dalam pengerjaan tugas portofolio ini, saya berdiskusi dengan Google Gemini untuk memperdalam pemahaman mengenai konsep otorisasi Django, keamanan otentikasi, dan perancangan skenario unit testing.
 
 - **Tools:** Gemini (Google AI)
 - **Model:** Gemini 2.5 Pro / Flash
-- **Tautan Percakapan:** [Tautan Chat Log Gemini - Tugas 3 PBP](https://gemini.google.com/share/d/1sY624wqiyiVDcBsovaGRB5HkTiyqBnwo?usp=sharing)
+- **Tautan Percakapan Publik:** [https://gemini.google.com/share/d/1_Fuz4e5kjXMxK0enMutm6VqO_xx5NWeN?usp=sharing](https://gemini.google.com/share/d/1_Fuz4e5kjXMxK0enMutm6VqO_xx5NWeN?usp=sharing)
 
----
-
-### 1. Catatan Evaluasi & Penyesuaian Mandiri
-
-Seluruh saran dan luaran dari AI telah saya telaah dan sesuaikan secara manual agar selaras dengan arsitektur proyek:
-
-1. **Form Styling & Layout:**  
-   Saran awal AI umumnya menggunakan rendering standar `{{ form.as_p }}`. Saya merancang *custom widgets* pada `forms.py` dengan kelas CSS terpisah (`form-input`, `form-select`, `form-textarea`) dan menyusun struktur grid form sendiri agar serasi dengan antarmuka *Sage Green Bento Grid*.
-2. **Pembersihan Karakter Emoji:**  
-   Menghapus seluruh karakter emoji pada kode dan template untuk menjaga estetika antarmuka yang bersih dan profesional.
-3. **Penyelarasan Model Portofolio:**  
-   Menyesuaikan seluruh logika CRUD agar merefleksikan model riil portofolio saya (`Experience` dan `Award`), bukan sekadar model generik tutorial.
-4. **Keamanan Penghapusan Data & Modal Popover:**  
-   Menambahkan lapisan konfirmasi hapus interaktif menggunakan HTML5 Popover API dengan efek *backdrop blur* serta memastikan penghapusan data hanya berjalan melalui metode HTTP POST.
-
----
-
-### 2. Rangkuman Log Diskusi dan Prompt Percakapan
-
-Berikut adalah transkrip pertanyaan/prompt yang saya ajukan selama berdiskusi dengan Gemini beserta ringkasan konsep yang diterapkan pada proyek:
-
-#### 1. Konsep ModelForm dan Proteksi CSRF
-- **Prompt:**  
-  *"Halo Gemini, di Tugas 3 ini kita diminta bikin form pakai `ModelForm`. Boleh tolong jelasin secara konsep kenapa di Django kita harus pakai `ModelForm` dibanding bikin tag `<form>` dan `<input>` HTML manual di file template? Terus fungsi tag `{% csrf_token %}` yang wajib ada di dalam form itu secara teknis buat apa ya?"*
-- **Poin Diskusi & Penerapan:**  
-  ModelForm menyederhanakan pemetaan skema database ke input form dan menyediakan validasi data otomatis di sisi server. Tag `{% csrf_token %}` menghasilkan token kriptografis unik untuk melindungi server dari serangan Cross-Site Request Forgery. Konsep ini saya terapkan pada `ExperienceForm` dan `AwardForm` di `main/forms.py`.
-
----
-
-#### 2. Mekanisme Update Form (*Instance Binding*)
-- **Prompt:**  
-  *"Gemini, di checklist tugas ada fitur Update/Edit data menggunakan form. Apa kita harus bikin file template HTML baru yang khusus buat edit, atau bisa pakai template form tambah data yang sudah ada? Terus gimana caranya supaya saat form edit dibuka, kotak inputnya udah otomatis terisi data lama yang mau diubah?"*
-- **Poin Diskusi & Penerapan:**  
-  Memahami teknik *instance binding* (`form = ExperienceForm(..., instance=experience)`) yang otomatis mengisi form dengan data lama dan mengeksekusi operasi update saat disimpan. Saya menyatukan antarmuka form tambah dan ubah dalam satu template `experience_form.html` menggunakan penanda `is_edit`.
-
----
-
-#### 3. Keamanan Delete Data & Modal Konfirmasi
-- **Prompt:**  
-  *"Untuk fitur hapus data, gimana cara bikin yang aman dan tampilannya bagus? Aku gamau langsung kehapus begitu tombol diklik, maunya ada pop-up konfirmasi dulu tanpa emoji dan tanpa perlu library JavaScript luar."*
-- **Poin Diskusi & Penerapan:**  
-  Memastikan penghapusan data tidak menggunakan GET request dan membangun modal popover HTML5 murni (`popover="auto"`) dengan backdrop blur agar proses penghapusan aman dan intuitif.
-
----
-
-#### 4. Serialisasi JSON/XML & Dynamic Search Filter
-- **Prompt:**  
-  *"Kenapa di aplikasi modern sekarang orang lebih milih format data JSON dibanding XML? Terus di view Django, gimana alur serialisasi dari QuerySet database sampai jadi response JSON, dan gimana cara nambahin filter pencarian judul (`?title=...`)?"*
-- **Poin Diskusi & Penerapan:**  
-  Memahami keunggulan efisiensi payload dan kemudahan parsing JSON di JavaScript dibandingkan XML. Mengimplementasikan fungsi `get_experiences_json` dan `get_experiences_xml` dengan dukungan filter kueri `?title=...`.
-
----
-
-#### 5. Penyusunan 31 Automated Unit Tests
-- **Prompt:**  
-  *"Bantu aku merancang skenario automated unit tests menyeluruh di `main/tests.py`. Aku mau mastiin semua form (valid dan invalid), fitur edit, fitur delete, search bar, dan API JSON/XML semuanya dites dan lulus 100% saat dijalankan."*
-- **Poin Diskusi & Penerapan:**  
-  Menyusun skenario pengujian komprehensif di `main/tests.py` untuk menguji form validation, operasi CRUD, respon status HTTP, keamanan delete, serta endpoint API (31/31 tests OK).
-
+### Catatan Evaluasi & Penyesuaian Mandiri:
+1. **Penerapan Otorisasi 4 Peran:** Menyusun logika hak akses di backend menggunakan helper `is_editor_user` dan `PermissionDenied` agar respons status HTTP 403 Forbidden tertangani secara standar bawaan Django.
+2. **Penyesuaian Tampilan Bento Grid:** Merancang styling form mandiri pada `forms.py` agar serasi dengan antarmuka Bento Grid portofolio.
+3. **Pembersihan Emoji:** Menghapus seluruh karakter emoji pada kode, template, dan antarmuka agar tampilan web bersih dan profesional.
+4. **Penyelarasan Model Portofolio:** Menyesuaikan seluruh operasi CRUD dan relasi `ManyToManyField` dengan model riil portofolio saya (`Experience` dan `Award`).
+5. **Keamanan Hapus Data:** Menambahkan modal konfirmasi popover HTML5 murni dan memastikan penghapusan hanya berjalan melalui metode HTTP POST demi integritas data.
