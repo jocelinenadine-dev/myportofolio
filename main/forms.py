@@ -1,4 +1,6 @@
-from django.forms import ModelForm, TextInput, Textarea, Select
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm, Select, Textarea, TextInput
+from django.utils.html import strip_tags
 from main.models import Award, Experience
 
 
@@ -46,6 +48,24 @@ class ExperienceForm(ModelForm):
                 }
             ),
         }
+
+    def clean_title(self):
+        title = strip_tags(self.cleaned_data["title"]).strip()
+        if not title:
+            raise ValidationError("Posisi atau peran tidak boleh kosong atau hanya berisi tag HTML.")
+        return title
+
+    def clean_description(self):
+        description = strip_tags(self.cleaned_data["description"]).strip()
+        if not description:
+            raise ValidationError("Deskripsi tidak boleh kosong atau hanya berisi tag HTML.")
+        return description
+
+    def clean_thumbnail(self):
+        thumbnail = self.cleaned_data.get("thumbnail")
+        if thumbnail:
+            return strip_tags(thumbnail).strip()
+        return thumbnail
 
 
 class AwardForm(ModelForm):
@@ -111,3 +131,33 @@ class AwardForm(ModelForm):
                 }
             ),
         }
+
+    def clean_title(self):
+        title = strip_tags(self.cleaned_data["title"]).strip()
+        if not title:
+            raise ValidationError("Nama penghargaan tidak boleh kosong atau hanya berisi tag HTML.")
+        return title
+
+    def clean_rank(self):
+        rank = strip_tags(self.cleaned_data["rank"]).strip()
+        if not rank:
+            raise ValidationError("Peringkat tidak boleh kosong atau hanya berisi tag HTML.")
+        return rank
+
+    def clean_issuer(self):
+        issuer = strip_tags(self.cleaned_data["issuer"]).strip()
+        if not issuer:
+            raise ValidationError("Penyelenggara tidak boleh kosong atau hanya berisi tag HTML.")
+        return issuer
+
+    def clean_year(self):
+        year = strip_tags(self.cleaned_data["year"]).strip()
+        if not year:
+            raise ValidationError("Tahun perolehan tidak boleh kosong atau hanya berisi tag HTML.")
+        return year
+
+    def clean_description(self):
+        description = strip_tags(self.cleaned_data["description"]).strip()
+        if not description:
+            raise ValidationError("Deskripsi tidak boleh kosong atau hanya berisi tag HTML.")
+        return description
