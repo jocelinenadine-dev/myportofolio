@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from main.forms import AwardForm, ExperienceForm
 from main.models import Experience, Award
@@ -72,13 +73,34 @@ def logout_user(request):
 
 def get_experiences_json(request):
     title_query = request.GET.get("title", "").strip()
-    experiences = Experience.objects.all().order_by("-started_at")
+    experiences = Experience.objects.prefetch_related("starred_by").all().order_by("-started_at")
 
     if title_query:
         experiences = experiences.filter(title__icontains=title_query)
 
-    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
-    return HttpResponse(experiences_json, content_type="application/json")
+    data = []
+    for exp in experiences:
+        starred_users = exp.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "title": exp.title,
+                "description": exp.description,
+                "category": exp.category,
+                "category_display": exp.get_category_display(),
+                "thumbnail": exp.thumbnail,
+                "period": exp.period,
+                "is_ongoing": exp.is_ongoing,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 def get_experiences_xml(request):
@@ -93,22 +115,35 @@ def get_experiences_xml(request):
 
 
 def show_experience(request):
-    json_response = get_experiences_json(request)
-    experiences_deserialized = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    experiences = [exp.object for exp in experiences_deserialized]
     title_query = request.GET.get("title", "").strip()
     is_editor = is_editor_user(request.user)
 
     context = {
         "name": "Joceline Nadine Immanuella",
-        "experience_list": experiences,
         "title_query": title_query,
         "is_editor": is_editor,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
+
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Pengalaman berhasil ditambahkan.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 @login_required(login_url="/login/")
