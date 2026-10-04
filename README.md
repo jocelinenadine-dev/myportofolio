@@ -328,3 +328,47 @@ Dalam pengerjaan tugas portofolio ini, saya berdiskusi dengan Google Gemini untu
 3. **Pembersihan Emoji:** Menghapus seluruh karakter emoji pada kode, template, dan antarmuka agar tampilan web bersih dan profesional.
 4. **Penyelarasan Model Portofolio:** Menyesuaikan seluruh operasi CRUD dan relasi `ManyToManyField` dengan model riil portofolio saya (`Experience` dan `Award`).
 5. **Keamanan Hapus Data:** Menambahkan modal konfirmasi popover HTML5 murni dan memastikan penghapusan hanya berjalan melalui metode HTTP POST demi integritas data.
+
+### Tugas 5: Web Interactivity with JavaScript
+
+**1. Jelaskan apa itu *debouncing* dan mengapa teknik ini penting diterapkan pada fitur pencarian yang menggunakan AJAX!**
+
+**Jawaban:**  
+*Debouncing* adalah teknik *programming* untuk menunda (*delay*) eksekusi sebuah fungsi sampai pengguna benar-benar berhenti melakukan aksi (misalnya berhenti mengetik) selama rentang waktu tertentu. 
+
+Pada fitur pencarian menggunakan AJAX, fungsi ini sangat krusial karena:
+- **Mencegah Beban Server (*Server Overload*):** Tanpa *debouncing*, setiap huruf yang diketik oleh *user* akan langsung menembakkan satu *request* ke server. Jika *user* mengetik kata "Django", browser akan mengirim 6 *request* beruntun dalam hitungan milidetik. *Debouncing* memastikan *request* hanya dikirim (misalnya setelah jeda 300ms) saat *user* sudah selesai merangkai kata.
+- **Menghindari *Race Condition*:** Karena AJAX bersifat *asynchronous*, respon dari *request* pertama bisa saja tiba lebih lambat dari *request* terakhir, yang berisiko membuat hasil pencarian di layar jadi melompat-lompat dan tidak sinkron dengan kata kunci terakhir.
+
+**2. Jelaskan fungsi dari penggunaan `await` ketika kita menggunakan `fetch()`! Apa yang akan terjadi jika kita tidak menggunakan `await`?**
+
+**Jawaban:**  
+Secara bawaan, fungsi `fetch()` di JavaScript berjalan secara asinkron (*asynchronous*) dan langsung mengembalikan objek *Promise* (janji bahwa data akan datang), bukan mengembalikan datanya langsung. Fungsi dari sintaks `await` adalah untuk memerintahkan JavaScript agar menunda eksekusi baris kode di bawahnya sampai proses *fetch* tersebut benar-benar selesai (di-*resolve*) dan datanya utuh terkirim dari server.
+
+Jika kita **tidak menggunakan `await`**:
+Variabel penampung tidak akan berisi JSON atau respon dari server, melainkan hanya status *Promise* yang menggantung (*pending*). Akibatnya, baris kode selanjutnya yang mencoba memanipulasi DOM atau membaca data tersebut akan langsung dieksekusi duluan, menyebabkan pesan *error* (seperti `undefined`) karena objek yang ingin dibaca secara harfiah belum tersedia di memori.
+
+**3. Jelaskan apa itu serangan XSS (*Cross-Site Scripting*) dan mengapa data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini daripada data yang ditampilkan langsung melalui *template* Django!**
+
+**Jawaban:**  
+XSS (*Cross-Site Scripting*) adalah celah keamanan di mana penyerang dapat menyuntikkan skrip berbahaya (biasanya JavaScript seperti `<script>` atau `onerror`) ke input data. Ketika data itu ditampilkan di layar pengguna lain, skrip tersebut akan ikut tereksekusi oleh browser dan berpotensi mencuri data krusial seperti *session cookies*.
+
+**Mengapa manipulasi DOM lewat JS lebih rentan?**
+- Ketika menggunakan **Template Django** (`{{ variable }}`), mesin DTL memiliki fitur *Autoescaping* bawaan. Ia otomatis mengubah karakter berbahaya seperti `<` dan `>` menjadi entitas aman (`&lt;` dan `&gt;`) sebelum HTML dikirim ke klien, sehingga skrip tidak akan bisa jalan.
+- Namun, ketika menggunakan **AJAX**, kita merender datanya secara manual di sisi klien (JS) menggunakan properti seperti `innerHTML` atau `insertAdjacentHTML()`. Browser akan memproses teks yang masuk secara mentah. Jika kita lupa membersihkan datanya secara manual di sisi klien (dengan fungsi kustom `escapeHtml`) dan di sisi server (dengan `strip_tags`), skrip berbahaya itu akan langsung tereksekusi tanpa halangan.
+
+---
+
+### AI Disclosure (Pernyataan Penggunaan Kecerdasan Buatan)
+
+Dalam pengerjaan Tugas Individu 5 PBP, saya memosisikan AI sebagai *study companion* untuk membantu memperkuat pemahaman logika saya mengenai *asynchronous JavaScript* dan manipulasi DOM, dengan rincian:
+
+- **Alat Bantu:** Gemini (Google AI)
+- **Tautan Log Diskusi:** [https://gemini.google.com/share/d/1NgaZ8VFpxsq6rwDAz5Osu8xTmGl9vhV5?usp=sharing](https://gemini.google.com/share/d/1NgaZ8VFpxsq6rwDAz5Osu8xTmGl9vhV5?usp=sharing)
+- **Rincian Bantuan yang Dipelajari:**
+  1. Mempelajari konsep serialisasi JSON di Django dan mengapa *QuerySet* tidak bisa dikirim langsung ke sisi *frontend* JavaScript.
+  2. Berdiskusi mendalam tentang cara kerja teknik optimasi *Debouncing* pada fitur *search bar* dinamis.
+  3. Membedah logika di balik kewajiban penggunaan sintaks `await` pada `fetch()` API.
+  4. Konsultasi mengenai celah kerentanan injeksi XSS pada *client-side rendering* dibandingkan dengan DTL (*Django Template Language*).
+  
+Saya mengonfirmasi bahwa seluruh kode AJAX, penataan Modal, pengaturan notifikasi *Toast*, serta sanitasi keamanan data (*strip_tags*), murni diimplementasikan, diuji otomatis dengan *unit testing*, dan dikelola secara bertahap melalui sistem kontrol versi Git oleh saya sendiri.
