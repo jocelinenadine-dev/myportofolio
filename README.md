@@ -64,18 +64,48 @@ Buka browser dan akses URL berikut:
 - **Halaman Login:** [http://localhost:8000/login/](http://localhost:8000/login/)
 - **Halaman Experience:** [http://localhost:8000/experience/](http://localhost:8000/experience/)
 - **Halaman Honors & Awards:** [http://localhost:8000/awards/](http://localhost:8000/awards/)
-- **Endpoint API JSON Experience:** [http://localhost:8000/api/experience/](http://localhost:8000/api/experience/)
-- **Endpoint API JSON Awards:** [http://localhost:8000/api/awards/](http://localhost:8000/api/awards/)
+- **Endpoint API DRF v1 (Experiences):** [http://localhost:8000/api/v1/experiences/](http://localhost:8000/api/v1/experiences/)
+- **Endpoint API DRF v1 (Awards):** [http://localhost:8000/api/v1/awards/](http://localhost:8000/api/v1/awards/)
+- **Endpoint Dedicated Star Toggle:** `POST http://localhost:8000/api/v1/experiences/<uuid:id>/star/`
+- **Endpoint API JSON Legacy Experience:** [http://localhost:8000/api/experience/](http://localhost:8000/api/experience/)
+- **Endpoint API JSON Legacy Awards:** [http://localhost:8000/api/awards/](http://localhost:8000/api/awards/)
+
+#### Daftar Lengkap Endpoint RESTful API (DRF v1)
+| Method | Endpoint | Hak Akses (RBAC) | Fungsi & Keterangan |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/experiences/` | Guest, User, Editor, Superuser | Menampilkan seluruh data pengalaman (mendukung parameter `?title=` dan `?category=`) |
+| `POST` | `/api/v1/experiences/` | Superuser | Menambahkan entitas pengalaman baru ke sistem |
+| `GET` | `/api/v1/experiences/<uuid:id>/` | Guest, User, Editor, Superuser | Menampilkan detail pengalaman berdasarkan identifier UUID |
+| `PUT / PATCH` | `/api/v1/experiences/<uuid:id>/` | Editor, Superuser | Memperbarui seluruh / sebagian atribut entitas pengalaman |
+| `DELETE` | `/api/v1/experiences/<uuid:id>/` | Superuser | Menghapus entitas pengalaman dari database secara permanen |
+| `POST` | `/api/v1/experiences/<uuid:id>/star/` | User, Editor, Superuser | Melakukan toggle bintang (star) oleh pengguna yang sedang login |
+| `GET` | `/api/v1/awards/` | Guest, User, Editor, Superuser | Menampilkan seluruh data penghargaan (mendukung parameter `?title=` dan `?category=`) |
+| `POST` | `/api/v1/awards/` | Superuser | Menambahkan entitas penghargaan baru ke sistem |
+| `GET` | `/api/v1/awards/<uuid:id>/` | Guest, User, Editor, Superuser | Menampilkan detail penghargaan berdasarkan identifier UUID |
+| `PUT / PATCH` | `/api/v1/awards/<uuid:id>/` | Editor, Superuser | Memperbarui seluruh / sebagian atribut entitas penghargaan |
+| `DELETE` | `/api/v1/awards/<uuid:id>/` | Superuser | Menghapus entitas penghargaan dari database secara permanen |
 
 ### 4. Menjalankan Automated Unit Tests
 
-Proyek ini dilengkapi dengan **50 automated unit tests** untuk memverifikasi keandalan model, view, routing URL, validasi form, CRUD, otorisasi 4 peran pengguna (Pengunjung, Pengguna Biasa, Editor, Superuser), manajemen cookie `last_login`, fitur Star, dan serialisasi data API.
+Proyek ini dilengkapi dengan total **78 automated unit tests** (60 unit tests untuk fungsionalitas Web MVT, Form, Authentication, Session, Cookie, dan AJAX, serta 18 automated tests untuk API Django REST Framework menggunakan `APITestCase`) untuk memverifikasi keandalan sistem secara menyeluruh.
 
-Jalankan pengujian otomatis dengan perintah:
-```bash
-python manage.py test
-```
-*Output yang diharapkan: `Ran 50 tests in ...s — OK (Found 50 test(s), 0 errors, 0 failures)`.*
+1. **Menjalankan seluruh rangkaian automated unit tests (78 tests):**
+   ```bash
+   python manage.py test
+   ```
+   *Output yang diharapkan: `Ran 78 tests in ...s — OK (Found 78 test(s), 0 errors, 0 failures)`.*
+
+2. **Menjalankan automated test suite API DRF secara spesifik (18 tests):**
+   ```bash
+   python manage.py test main.tests_api
+   ```
+   *Output yang diharapkan: `Ran 18 tests in ...s — OK (Found 18 test(s), 0 errors, 0 failures)`.*
+
+3. **Menjalankan test suite fungsionalitas Web, MVT, dan Autentikasi (60 tests):**
+   ```bash
+   python manage.py test main.tests
+   ```
+   *Output yang diharapkan: `Ran 60 tests in ...s — OK (Found 60 test(s), 0 errors, 0 failures)`.*
 
 ---
 
@@ -87,6 +117,8 @@ python manage.py test
 | **Tugas 2 (Minggu 2)** | • Inisialisasi arsitektur Model-View-Template (MVT) pada Django.<br>• Pembuatan model database `Experience` dan `Award` dengan skema `UUIDField`, `CharField`, `choices`, dan `DateTimeField`.<br>• Konfigurasi *Django Admin* (`admin.py`) untuk pengelolaan data dinamis.<br>• Pendaftaran rute URL modular dan pembuatan data migration untuk inisialisasi deployment PWS. | Selesai (100%) |
 | **Tugas 3 (Minggu 3)** | • Penerapan **Template Inheritance** dengan kerangka utama [`templates/base.html`](templates/base.html) dan pembersihan duplikasi template.<br>• Pembuatan Django `ModelForm` ([`main/forms.py`](main/forms.py)) untuk `ExperienceForm` dan `AwardForm` dengan validasi server-side otomatis.<br>• Implementasi **Full CRUD (Create, Read, Update, Delete)** pada bagian Experience dan Awards.<br>• Pembuatan antarmuka modal konfirmasi hapus menggunakan HTML5 Popover API dengan backdrop blur.<br>• Fitur pencarian instan dinamis (*search bar*) dengan parameter kueri `?title=...`.<br>• Implementasi **Data Delivery** (API JSON dan XML) serta deserialisasi data internal.<br>• Penyusunan **31 automated unit tests** (100% lolos). | Selesai (100%) |
 | **Tugas 4 (Minggu 4)** | • Implementasi sistem autentikasi bawaan Django: **Register** (`UserCreationForm`), **Login** (`AuthenticationForm`), dan **Logout**.<br>• Pembaruan antarmuka Navbar dengan status autentikasi dinamis (`{% if user.is_authenticated %}`).<br>• Manajemen **Session & Cookie**: penerbitan cookie `last_login` saat login dan penghapusan saat logout, serta penampilannya pada profil utama.<br>• Penerapan **Otorisasi 4 Peran Pengguna**: Pengunjung (Guest), Pengguna Biasa, Editor (Django Group `Editor`), dan Superuser (Admin).<br>• Proteksi server-side: `@login_required` dan pembatasan `PermissionDenied` (HTTP 403 Forbidden).<br>• Fitur interaktif **Star (★)** berbasis relasi `ManyToManyField(User)` pada model `Experience`.<br>• Penyusunan **50 automated unit tests** komprehensif (100% lolos). | Selesai (100%) |
+| **Tugas 5 (Minggu 5)** | • Integrasi **Web Interactivity with JavaScript & AJAX** pada kartu Bento Grid.<br>• Implementasi pembaruan data asinkronus (`fetch()`) tanpa *full page reload*.<br>• Fitur pencarian instan dinamis dengan teknik **Debouncing** untuk optimasi beban server.<br>• Pembuatan form modal interaktif untuk penambahan data serta feedback instan via *Toast Notification*.<br>• Proteksi keamanan *client-side rendering* terhadap serangan XSS menggunakan sanitasi `strip_tags` dan *escaping* HTML.<br>• Pembaruan automated unit tests menjadi **60 tests** (100% lolos). | Selesai (100%) |
+| **Tugas 6 (Minggu 6)** | • Implementasi **Django REST Framework (DRF)** untuk merancang API RESTful headless (`/api/v1/`).<br>• Perancangan `ExperienceSerializer` dan `AwardSerializer` dengan penentuan `fields` eksplisit, validasi field-level & object-level, serta computed fields (`stars_count`, `is_starred`).<br>• Penerapan **Role-Based Access Control (RBAC)** 4 Peran Pengguna di sisi server via custom permission class `IsPortfolioRolePermission`.<br>• Pembuatan dedicated action endpoint toggle bintang (`POST /api/v1/experiences/<uuid:id>/star/`).<br>• Pendaftaran rute URL modular berbasis DRF `DefaultRouter`.<br>• Penyusunan **18 automated API unit tests** komprehensif menggunakan `APITestCase` (Total akumulasi proyek: **78 tests lolos 100%**). | Selesai (100%) |
 
 ---
 
@@ -372,3 +404,165 @@ Dalam pengerjaan Tugas Individu 5 PBP, saya memosisikan AI sebagai *study compan
   4. Konsultasi mengenai celah kerentanan injeksi XSS pada *client-side rendering* dibandingkan dengan DTL (*Django Template Language*).
   
 Saya mengonfirmasi bahwa seluruh kode AJAX, penataan Modal, pengaturan notifikasi *Toast*, serta sanitasi keamanan data (*strip_tags*), murni diimplementasikan, diuji otomatis dengan *unit testing*, dan dikelola secara bertahap melalui sistem kontrol versi Git oleh saya sendiri.
+
+
+---
+
+### Tugas 6: Django REST Framework Implementation
+
+**1. Jelaskan apa yang dimaksud dengan REST dan mengapa mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful!**
+
+**Jawaban:**  
+REST (*Representational State Transfer*) adalah gaya arsitektur perangkat lunak (*architectural style*) yang dirancang oleh Roy Fielding untuk memandu perancangan sistem terdistribusi, khususnya sistem berbasis web. REST memanfaatkan protokol HTTP standar sebagai fondasi komunikasi data antar-sistem.
+
+**Mengapa mengembalikan format JSON saja belum cukup disebut RESTful?**  
+Format JSON hanyalah sebuah representasi serialisasi teks untuk pertukaran data (*data interchange format*). Sebuah API yang sekadar mengembalikan data JSON belum tentu memenuhi prinsip-prinsip arsitektural REST. Agar sebuah API dapat dikatakan benar-benar *RESTful*, API tersebut harus memenuhi batasan arsitektur (*architectural constraints*) REST:
+- **Penggunaan HTTP Verbs yang Semantik (*Stateless & Standard Methods*):** API RESTful menggunakan metode HTTP sesuai fungsinya (`GET` untuk membaca, `POST` untuk membuat entitas baru, `PUT` untuk mengganti seluruh entitas, `PATCH` untuk pembaruan parsial, dan `DELETE` untuk menghapus). Jika sebuah endpoint menggunakan `GET /api/delete-experience/1/` atau `POST /api/get-all/`, API tersebut bukan RESTful meskipun keluarannya berformat JSON, karena melanggar semantik HTTP.
+- **Resource-Oriented URI (Bukan Action-Oriented):** Pengalamatan endpoint harus berorientasi pada kata benda entitas (*nouns* / *resources*), seperti `/api/v1/experiences/` atau `/api/v1/awards/<id>/`, bukan kata kerja tindakan seperti `/api/v1/createExperience`.
+- **Penggunaan Status Code HTTP yang Tepat:** Respon harus mencerminkan status eksekusi menggunakan kode standar HTTP, seperti `200 OK`, `201 Created` untuk pembuatan data, `204 No Content` untuk penghapusan, `400 Bad Request` untuk validasi gagal, `401 Unauthorized` untuk autentikasi, dan `403 Forbidden` untuk batasan izin. API non-RESTful sering kali keliru dengan selalu mengembalikan `200 OK` meskipun di dalam JSON terdapat keterangan error `{"status": "error"}`.
+- **Statelessness:** Setiap request dari klien harus memuat seluruh informasi yang diperlukan oleh server untuk memproses permintaan tersebut secara mandiri tanpa bergantung pada status tersimpan di server (*stateless*).
+- **Uniform Interface & HATEOAS:** Klien berinteraksi dengan sumber daya melalui representasi terstandarisasi yang memungkinkan manipulasi sumber daya secara konsisten.
+
+---
+
+**2. Jelaskan pula perbedaan PUT dan PATCH beserta contoh kapan masing-masing sebaiknya digunakan!**
+
+**Jawaban:**  
+Metode `PUT` dan `PATCH` sama-sama digunakan untuk melakukan mutasi pembaruan (*update*) data pada sumber daya yang sudah ada, namun memiliki perbedaan mendasar pada cakupan payload dan karakteristik idempoten:
+
+- **Metode `PUT` (Full Replacement / Penggantian Total):**
+  - **Karakteristik:** `PUT` bersifat idempoten (*idempotent*). Klien diwajibkan mengirimkan **seluruh atribut lengkap** dari entitas yang bersangkutan dalam body request. Atribut yang tidak disertakan dalam payload akan dianggap kosong, diatur ke nilai *default*, atau memicu error validasi.
+  - **Kapan Digunakan:** Ketika klien ingin mengganti keseluruhan dokumen/entitas dengan representasi baru secara utuh.
+  - **Contoh pada Portofolio:** Pengguna Editor ingin memperbarui data pengalaman organisasi secara utuh. Klien mengirim payload lengkap mencakup `title`, `description`, `category`, dan `thumbnail`:
+    ```http
+    PUT /api/v1/experiences/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d/
+    Content-Type: application/json
+
+    {
+      "title": "BEM Fasilkom UI - Staff PR",
+      "description": "Bertanggung jawab pada divisi relasi publik",
+      "category": "organization",
+      "thumbnail": "https://example.com/bem.png"
+    }
+    ```
+- **Metode `PATCH` (Partial Update / Pembaruan Parsial):**
+  - **Karakteristik:** `PATCH` hanya mengirimkan **sebagian atribut yang ingin diubah saja**. Atribut lain yang tidak disertakan dalam payload request tidak akan terpengaruh atau terhapus di database.
+  - **Kapan Digunakan:** Ketika klien hanya ingin mengubah satu atau dua field spesifik tanpa perlu membebani bandwidth jaringan dengan mengirimkan seluruh data yang tidak berubah.
+  - **Contoh pada Portofolio:** Pengguna Editor hanya ingin memperbaiki kesalahan ketik pada peringkat penghargaan tanpa mengubah judul, deskripsi, penyelenggara, maupun tahun:
+    ```http
+    PATCH /api/v1/awards/a4c9f182-58e1-4562-bdf4-9720c2937e29/
+    Content-Type: application/json
+
+    {
+      "rank": "Grand Champion Winner"
+    }
+    ```
+
+---
+
+**3. Jelaskan peran serializer pada Django REST Framework! Apa keuntungannya dibandingkan merakit dictionary secara manual dengan `JsonResponse` seperti pada Tutorial 05?**
+
+**Jawaban:**  
+Pada Django REST Framework, *Serializer* bertindak sebagai penerjemah dua arah (*two-way translator*) sekaligus pintu gerbang validasi data antara arsitektur Python/Django ORM dengan format representasi data eksternal (seperti JSON).
+
+**Peran Utama Serializer:**
+1. **Serialisasi (Output):** Mengonversi struktur data kompleks dari Django seperti objek model dan *QuerySet* menjadi representasi tipe data Python primitif (*dict*, *list*, string, boolean, integer) yang kemudian dapat di-*render* secara otomatis menjadi format bytes JSON/XML.
+2. **Deserialisasi & Validasi (Input):** Menerima data payload mentah yang dikirim oleh klien, memeriksa validitasnya terhadap aturan tipe data dan skema model, lalu mengubahnya kembali menjadi objek Python atau instance model yang siap disimpan ke database (`serializer.save()`).
+
+**Keuntungan Menggunakan Serializer Dibandingkan Merakit Dictionary Manual via `JsonResponse`:**
+- **Validasi Otomatis yang Terstruktur & Ketat:**  
+  Jika menggunakan dictionary manual (`JsonResponse`), kita harus menulis puluhan baris validasi manual (`if not 'title' in data: ...`, pengecekan tipe data, panjang karakter, dsb). Serializer menangani seluruh validasi tipe data secara otomatis sesuai spesifikasi model, mendukung validasi kustom di tingkat field (`validate_title`), dan validasi antar-field di tingkat objek (`validate()`). Jika data tidak valid, serializer otomatis memproduksi format pesan error terstandarisasi beserta kode status HTTP 400.
+- **Pencegahan Celah Keamanan Mass Assignment:**  
+  Dengan mendefinisikan `fields` dan `read_only_fields` secara eksplisit, serializer secara ketat menolak atau mengabaikan field yang tidak diizinkan untuk diubah oleh klien. Pada dictionary manual, pengembang rentan lupa menyaring input mentah dari `request.POST` atau `json.loads(request.body)`.
+- **Dukungan Computed Fields yang Kuat:**  
+  DRF Serializer menyediakan `SerializerMethodField` yang memudahkan komputasi atribut dinamis yang memerlukan konteks request HTTP saat itu (seperti menghitung `is_starred` berdasarkan `request.user`).
+- **Efisiensi Kode (*Clean Code & DRY*):**  
+  Serializer dapat digunakan kembali (*reusable*) di berbagai endpoint (List, Detail, Create, Update) tanpa perlu menulis ulang pemetaan kamus secara berulang-ulang di setiap fungsi view.
+
+---
+
+**4. Jelaskan perbedaan autentikasi dan otorisasi pada Django REST Framework!**
+
+**Jawaban:**  
+Meskipun sering digunakan bersamaan dalam manajemen keamanan sistem, autentikasi dan otorisasi adalah dua proses yang memiliki tanggung jawab berbeda:
+
+- **Autentikasi (*Authentication - "Siapa Anda?"):**
+  - **Definisi:** Proses untuk memverifikasi dan membuktikan identitas pengguna yang sedang melakukan request ke sistem.
+  - **Mekanisme di DRF:** DRF memeriksa kredensial yang dikirimkan pada header atau cookie request melalui `authentication_classes` (seperti `SessionAuthentication` via session cookie atau `BasicAuthentication` via header `Authorization`).
+  - **Hasil:** Jika kredensial terbukti valid, DRF akan mengisi `request.user` dengan objek instance pengguna yang sah. Jika tidak terbukti, `request.user` akan diisi oleh `AnonymousUser`. Jika kredensial salah, DRF melempar *exception* `AuthenticationFailed` (HTTP 401 Unauthorized).
+- **Otorisasi (*Authorization / Permissions - "Apa yang Boleh Anda Lakukan?"):**
+  - **Definisi:** Proses untuk menentukan apakah pengguna yang identitasnya sudah diketahui tersebut memiliki hak akses (*permission*) untuk mengeksekusi aksi tertentu pada sumber daya yang dituju.
+  - **Mekanisme di DRF:** DRF mengevaluasi aturan hak akses melalui `permission_classes` (seperti kelas kustom `IsPortfolioRolePermission`). Pengecekan dilakukan setelah proses autentikasi selesai via method `has_permission()` dan `has_object_permission()`.
+  - **Hasil:** Jika pengguna mencoba melakukan aksi yang melampaui haknya (contohnya pengguna biasa mencoba mengirim `POST` untuk membuat pengalaman baru, atau editor mencoba mengirim `DELETE`), DRF akan menolak request tersebut dengan mengembalikan respon **HTTP 403 Forbidden**.
+
+**Hubungan Keduanya:**  
+Autentikasi selalu terjadi lebih dahulu daripada otorisasi. Sistem harus mengetahui identitas pemanggil request (*autentikasi*) sebelum dapat memutuskan apakah pemanggil tersebut memiliki hak untuk menjalankan aksi (*otorisasi*).
+
+---
+
+**5. Mengapa hak akses harus diperiksa dengan *permission class* di server, bukan hanya dengan menyembunyikan tombol di template?**
+
+**Jawaban:**  
+Pemeriksaan hak akses mutlak wajib ditegakkan di sisi server menggunakan *permission class* karena alasan-alasan keamanan mendasar berikut:
+
+- **Prinsip *Zero Trust Client* (Antarmuka Frontend Berada di Bawah Kendali Penuh Klien):**  
+  Kode HTML, JavaScript, dan CSS yang berjalan pada browser pengguna dapat dimanipulasi dengan bebas oleh pengguna. Atribut `disabled` atau penyembunyian tombol menggunakan DTL `{% if user.is_superuser %}` hanyalah lapisan presentasi visual. Pengguna yang paham teknis dapat membuka *Developer Tools* (Inspect Element) pada browser dan dengan mudah memunculkan kembali tombol yang disembunyikan.
+- **Klien Dapat Melewati Tampilan Browser (*Bypass UI*):**  
+  Pada arsitektur API, request HTTP tidak wajib dikirimkan melalui klik tombol di halaman website. Siapa pun dapat menembakkan request langsung ke endpoint API menggunakan perangkat seperti cURL, Postman, ekstensi browser, atau skrip otomatis Python. Jika di server tidak dipasang `permission_classes`, request `DELETE /api/v1/experiences/<uuid>/` yang ditembakkan lewat cURL oleh pengguna biasa akan tetap diproses dan menghapus data secara permanen.
+- **Integritas Aturan Bisnis (*Business Logic Integrity*):**  
+  Server adalah satu-satunya gerbang pertahanan (*single source of truth*) yang menjamin integritas data dan menegakkan *Role-Based Access Control* (RBAC). Penyembunyian elemen di sisi template hanya berfungsi untuk kenyamanan pengguna (*User Experience* / UX) agar pengguna tidak bingung melihat tombol yang tidak bisa mereka pakai, sedangkan *permission class* di sisi server adalah keharusan mutlak untuk menegakkan keamanan sistem (*security*).
+
+---
+
+#### Langkah-Langkah Pengerjaan Tugas 6 (Checklist)
+
+1. **Instalasi dan Konfigurasi Django REST Framework:**
+   - Menambahkan `djangorestframework` ke dalam lingkungan virtual dan mencatatnya pada `requirements.txt`.
+   - Mendaftarkan `'rest_framework'` ke dalam `INSTALLED_APPS` pada `portofolio/settings.py`.
+   - Mengonfigurasi `REST_FRAMEWORK` dengan `SessionAuthentication` dan `BasicAuthentication` sebagai kelas autentikasi standar.
+2. **Pembuatan Serializers (`main/serializers.py`):**
+   - Merancang `ExperienceSerializer` dan `AwardSerializer` dengan menentukan daftar `fields` dan `read_only_fields` secara eksplisit guna menangkal celah *mass assignment*.
+   - Menambahkan computed field `stars_count` (menggunakan `source='starred_by.count'`) dan `is_starred` (menggunakan `SerializerMethodField` yang membaca `request.user` dari konteks).
+   - Menambahkan validasi field-level (`validate_title`, `validate_year`) dan validasi object-level (`validate()` untuk memastikan `ended_at >= started_at`).
+3. **Penerapan Otorisasi 4 Peran Pengguna (RBAC) di Sisi Server (`main/permissions.py`):**
+   - Membuat kelas custom permission `IsPortfolioRolePermission` turunan `permissions.BasePermission`.
+   - Menegakkan hak akses 4 peran:
+     - **Pengunjung (Guest):** Hak akses *read-only* pada semua katalog (`GET`, `HEAD`, `OPTIONS`).
+     - **Pengguna Biasa:** Hak akses *read-only* pada katalog dan hak akses melakukan toggle bintang pada entitas pengalaman.
+     - **Editor (Grup 'Editor'):** Hak akses *read-only*, toggle bintang, dan memperbarui data (`PUT`, `PATCH`). Dilarang menambah (`POST`) dan menghapus (`DELETE`).
+     - **Superuser:** Hak akses penuh atas seluruh operasi CRUD dan toggle bintang.
+4. **Implementasi API ViewSets & Dedicated Endpoint Star (`main/api_views.py`):**
+   - Membuat `ExperienceViewSet` dan `AwardViewSet` berbasis `viewsets.ModelViewSet`.
+   - Menerapkan fungsi filter dinamis berdasarkan parameter kueri `?title=...` dan `?category=...`.
+   - Membuat custom action endpoint dedicated `@action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])` untuk fungsi `star` toggle.
+5. **Pendaftaran Rute URL API Modular (`main/api_urls.py` & `portofolio/urls.py`):**
+   - Mendaftarkan viewset ke `DefaultRouter` DRF dengan endpoint prefix `experiences` dan `awards`.
+   - Memasukkan routing ke `portofolio/urls.py` dengan prefix `path('api/v1/', include('main.api_urls'))`.
+6. **Penyusunan Automated Unit Tests API Komprehensif (`main/tests_api.py`):**
+   - Mengembangkan 18 skenario pengujian unit berbasis `rest_framework.test.APITestCase`.
+   - Menguji interaksi 4 peran pengguna terhadap endpoint katalog, verifikasi izin create/edit/delete, pengujian toggle star, validasi input data salah (HTTP 400), sanitasi XSS, dan pengujian pemfilteran kueri.
+   - Memastikan seluruh 78 unit test proyek (60 web tests + 18 API tests) lulus dengan status `OK (100%)`.
+
+---
+
+### AI Disclosure (Pernyataan Penggunaan Kecerdasan Buatan)
+
+Dalam pengerjaan Tugas Individu 6 PBP, saya berdiskusi dengan Google Gemini sebagai sarana belajar (*study companion*) untuk memperdalam pemahaman konsep RESTful API, serialisasi Django REST Framework, dan arsitektur Role-Based Access Control (RBAC), dengan rincian:
+
+- **Alat Bantu:** Gemini (Google AI)
+- **Tautan Log Percakapan Publik:** [https://share.gemini.google/wtLiUlimxxPp](https://share.gemini.google/wtLiUlimxxPp)
+- **Daftar Prompt / Pertanyaan yang Diajukan (Chat Log):**
+  1. *"Kak, apa yang dimaksud dengan REST dan kenapa sekadar mengembalikan JSON belum cukup buat disebut RESTful?"*
+  2. *"Bisa jelasin perbedaan antara metode HTTP PUT sama PATCH? Kapan kita harus pakai PUT dan kapan mending pakai PATCH di API portofolio?"*
+  3. *"Apa peran serializer di DRF dan apa keunggulannya dibanding kalau kita rakit dictionary manual pakai JsonResponse kayak di tutorial kemarin?"*
+  4. *"Bisa tolong bedah perbedaan mendasar antara autentikasi dan otorisasi di Django REST Framework?"*
+  5. *"Kenapa pemeriksaan hak akses wajib banget dipasang di server pakai permission class, bukan cuma sekadar sembunyiin tombol di template HTML?"*
+  6. *"Bisa bantu contoh skenario unit test pakai APITestCase buat ngetes 4 peran pengguna dan validasi status code HTTP-nya secara lengkap?"*
+- **Rincian Bantuan yang Dipelajari & Penyesuaian Mandiri:**
+  1. Memahami prinsip arsitektur REST, semantik HTTP verbs, dan batasan statelessness pada perancangan API.
+  2. Menguasai perbedaan fungsional antara metode penggantian total `PUT` dan pembaruan parsial `PATCH`.
+  3. Menggunakan DRF Serializer untuk menangani serialisasi, deserialisasi, dan validasi data secara terstruktur menggantikan pendekatan kamus manual.
+  4. Menerapkan pemisahan konsep autentikasi (*SessionAuthentication*) dan otorisasi kustom (*IsPortfolioRolePermission*) untuk menegakkan kontrol akses 4 peran di sisi server.
+  5. Menyusun 18 skenario pengujian otomatis dengan `APITestCase` yang diverifikasi secara mandiri hingga seluruh 78 unit test proyek berstatus lulus (*OK 100%*).
+
+Saya mengonfirmasi bahwa seluruh arsitektur API, konfigurasi serializer, hak akses RBAC, serta pengujian unit pada proyek ini diimplementasikan, diuji otomatis (78 unit tests lulus 100%), dan dikelola secara bertahap melalui Git oleh saya sendiri.
